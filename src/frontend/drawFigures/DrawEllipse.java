@@ -122,12 +122,14 @@ public class DrawEllipse extends DrawFigure{
 
     @Override
     public void mirrorH() {
-        super.mirrorOvals(ellipse, true);
+        Point newCenterPoint = new Point(ellipse.getCenterPoint().getX() + (ellipse.getsMayorAxis()), ellipse.getCenterPoint().getY());
+        ellipse.setCenterPoint(newCenterPoint);
     }
 
     @Override
     public void mirrorV() {
-        super.mirrorOvals(ellipse, false);
+        Point newCenterPoint1 = new Point(ellipse.getCenterPoint().getX(), ellipse.getCenterPoint().getY() + ellipse.getsMinorAxis());
+        ellipse.setCenterPoint(newCenterPoint1);
     }
 
     @Override

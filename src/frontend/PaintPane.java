@@ -233,6 +233,5 @@ public class PaintPane extends BorderPane {
 	void redrawCanvas(DrawFigure figure){
 		redrawCanvas(Set.of(figure));
 	}
-
-
+	
 }

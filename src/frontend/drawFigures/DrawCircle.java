@@ -104,16 +104,12 @@ public class DrawCircle extends DrawFigure{
 
     @Override
     public void mirrorH() {
-        Ellipse ellipse = new Ellipse(circle.getCenterPoint(), circle.getRadius(), circle.getRadius());
-        super.mirrorOvals(ellipse, true);
-        this.circle = new Circle(ellipse.getCenterPoint(), ellipse.getsMayorAxis());
+        this.circle = new Circle(new Point (circle.getCenterPoint().getX()  + 2 * circle.getRadius(), circle.getCenterPoint().getY()), circle.getRadius());
     }
 
     @Override
     public void mirrorV() {
-        Ellipse ellipse = new Ellipse(circle.getCenterPoint(), circle.getRadius(), circle.getRadius());
-        super.mirrorOvals(ellipse, false);
-        this.circle = new Circle(ellipse.getCenterPoint(), ellipse.getsMayorAxis());
+        this.circle = new Circle(new Point(circle.getCenterPoint().getX(), circle.getCenterPoint().getY() + 2 * circle.getRadius()) , circle.getRadius());
     }
 
     @Override
