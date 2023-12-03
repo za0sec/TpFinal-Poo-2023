@@ -4,15 +4,19 @@ import backend.model.Circle;
 import backend.model.Point;
 import javafx.scene.canvas.GraphicsContext;
 
-public class DrawCircle extends Circle implements DrawFigure{
+public class DrawCircle extends DrawFigure{
 
-    private GraphicsContext gc;
+    Circle circle;
+
     public DrawCircle(Point centerPoint, double radius, GraphicsContext gc) {
-        super(centerPoint, radius);
+        super(gc);
+        this.circle = new Circle(centerPoint, radius);
     }
 
     @Override
     public void draw() {
-
+        double diameter = circle.getRadius() * 2;
+        gc.fillOval(circle.getCenterPoint().getX() - circle.getRadius(), circle.getCenterPoint().getY() - circle.getRadius(), diameter, diameter);
+        gc.strokeOval(circle.getCenterPoint().getX() - circle.getRadius(), circle.getCenterPoint().getY() - circle.getRadius(), diameter, diameter);
     }
 }

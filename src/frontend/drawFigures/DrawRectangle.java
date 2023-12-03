@@ -1,24 +1,29 @@
 package frontend.drawFigures;
 
+import backend.model.Circle;
 import backend.model.Point;
 import backend.model.Rectangle;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
-public class DrawRectangle extends Rectangle implements DrawFigure {
-
-    private final GraphicsContext gc;
+public class DrawRectangle extends DrawFigure {
 
 
-    public DrawRectangle(Point topLeft, Point bottomRight, GraphicsContext gc) {
-        super(topLeft, bottomRight);
-        this.gc = gc;
+    private Rectangle rectangle;
+
+
+    public DrawRectangle(Point topLeft, Point bottomRight, GraphicsContext gc, Color fill, Color stroke) {
+        super(gc);
+        this.rectangle = new Rectangle(topLeft, bottomRight);
+        gc.setFill(fill);
+        gc.setStroke(stroke);
     }
 
     @Override
     public void draw() {
-        gc.fillRect(this.getTopLeft().getX(), this.getTopLeft().getY(),
-                Math.abs(this.getTopLeft().getX() - this.getBottomRight().getX()), Math.abs(this.getTopLeft().getY() - this.getBottomRight().getY()));
-        gc.strokeRect(this.getTopLeft().getX(), this.getTopLeft().getY(),
-                Math.abs(this.getTopLeft().getX() - this.getBottomRight().getX()), Math.abs(this.getTopLeft().getY() - this.getBottomRight().getY()));
+        gc.fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
+                Math.abs(rectangle.getTopLeft().getX() - rectangle.getBottomRight().getX()), Math.abs(rectangle.getTopLeft().getY() - rectangle.getBottomRight().getY()));
+        gc.strokeRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
+                Math.abs(rectangle.getTopLeft().getX() - rectangle.getBottomRight().getX()), Math.abs(rectangle.getTopLeft().getY() - rectangle.getBottomRight().getY()));
     }
 }
