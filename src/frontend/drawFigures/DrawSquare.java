@@ -3,13 +3,14 @@ package frontend.drawFigures;
 import backend.model.Point;
 import backend.model.Square;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 public class DrawSquare extends DrawFigure{
 
     private final Square square;
 
-    public DrawSquare(Point topLeft, double size, GraphicsContext gc) {
-        super(gc);
+    public DrawSquare(Point topLeft, double size, GraphicsContext gc, Color fill, Color stroke) {
+        super(gc, fill, stroke);
         this.square = new Square(topLeft, size);
     }
 

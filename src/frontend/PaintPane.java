@@ -2,13 +2,14 @@ package frontend;
 
 import backend.CanvasState;
 import backend.model.*;
-import frontend.drawFigures.DrawFigure;
-import frontend.drawFigures.DrawRectangle;
+import frontend.buttons.drawButtons.*;
+import frontend.drawFigures.*;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
@@ -36,6 +37,9 @@ public class PaintPane extends BorderPane {
 	ToggleButton ellipseButton = new ToggleButton("Elipse");
 	ToggleButton deleteButton = new ToggleButton("Borrar");
 
+
+
+
 	// Selector de color de relleno
 	ColorPicker fillColorPicker = new ColorPicker(defaultFillColor);
 
@@ -61,6 +65,11 @@ public class PaintPane extends BorderPane {
 			tool.setToggleGroup(tools);
 			tool.setCursor(Cursor.HAND);
 		}
+		rectangleButton.setUserData(new DrawRectangleButton());
+		circleButton.setUserData(new DrawCircleButton());
+		squareButton.setUserData(new DrawSquareButton());
+		ellipseButton.setUserData(new DrawEllipseButton());
+
 		VBox buttonsBox = new VBox(10);
 		buttonsBox.getChildren().addAll(toolsArr);
 		buttonsBox.getChildren().add(fillColorPicker);
@@ -82,27 +91,16 @@ public class PaintPane extends BorderPane {
 				return ;
 			}
 			DrawFigure newFigure = null;
-			if(rectangleButton.isSelected()) {
-				newFigure = new DrawRectangle(startPoint, endPoint, gc, defaultFillColor, Color.BLACK);
+			Toggle selectedToggle = tools.getSelectedToggle();
+			if (selectedToggle != null) {
+				Buttons command = (Buttons) selectedToggle.getUserData();
+				newFigure = command.execute(startPoint, endPoint, gc, defaultFillColor, Color.BLACK);
+
+				figureColorMap.put(newFigure, fillColorPicker.getValue());
+				canvasState.addFigure(newFigure);
+				startPoint = null;
+				redrawCanvas();
 			}
-			/*else if(circleButton.isSelected()) {
-				double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new DrawCircle(startPoint, circleRadius);
-			} else if(squareButton.isSelected()) {
-				double size = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new DrawSquare(startPoint, size);
-			} else if(ellipseButton.isSelected()) {
-				Point centerPoint = new Point(Math.abs(endPoint.x + startPoint.x) / 2, (Math.abs((endPoint.y + startPoint.y)) / 2));
-				double sMayorAxis = Math.abs(endPoint.x - startPoint.x);
-				double sMinorAxis = Math.abs(endPoint.y - startPoint.y);
-				newFigure = new DrawEllipse(centerPoint, sMayorAxis, sMinorAxis);
-			}*/ else {
-				return ;
-			}
-			figureColorMap.put(newFigure, fillColorPicker.getValue());
-			canvasState.addFigure(newFigure);
-			startPoint = null;
-			redrawCanvas();
 		});
 
 		canvas.setOnMouseMoved(event -> {

@@ -3,13 +3,14 @@ package frontend.drawFigures;
 import backend.model.Ellipse;
 import backend.model.Point;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 public class DrawEllipse extends DrawFigure{
 
     Ellipse ellipse;
 
-    public DrawEllipse(Point centerPoint, double sMayorAxis, double sMinorAxis, GraphicsContext gc) {
-        super(gc);
+    public DrawEllipse(Point centerPoint, double sMayorAxis, double sMinorAxis, GraphicsContext gc, Color fill, Color stroke) {
+        super(gc, fill, stroke);
         this.ellipse = new Ellipse(centerPoint, sMayorAxis, sMinorAxis);
     }
 

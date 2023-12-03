@@ -13,10 +13,8 @@ public class DrawRectangle extends DrawFigure {
 
 
     public DrawRectangle(Point topLeft, Point bottomRight, GraphicsContext gc, Color fill, Color stroke) {
-        super(gc);
+        super(gc, fill, stroke);
         this.rectangle = new Rectangle(topLeft, bottomRight);
-        gc.setFill(fill);
-        gc.setStroke(stroke);
     }
 
     @Override

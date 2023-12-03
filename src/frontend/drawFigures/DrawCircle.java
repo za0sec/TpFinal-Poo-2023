@@ -3,13 +3,14 @@ package frontend.drawFigures;
 import backend.model.Circle;
 import backend.model.Point;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 public class DrawCircle extends DrawFigure{
 
     Circle circle;
 
-    public DrawCircle(Point centerPoint, double radius, GraphicsContext gc) {
-        super(gc);
+    public DrawCircle(Point centerPoint, double radius, GraphicsContext gc, Color fill, Color stroke) {
+        super(gc, fill, stroke);
         this.circle = new Circle(centerPoint, radius);
     }
 
