@@ -22,4 +22,5 @@ public class Square implements Figure {
         return String.format("Cuadrado [ %s , %s ]", topLeft, bottomRight);
     }
 
+
 }

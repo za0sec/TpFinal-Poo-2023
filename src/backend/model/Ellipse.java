@@ -28,4 +28,5 @@ public class Ellipse implements Figure {
         return sMinorAxis;
     }
 
+
 }

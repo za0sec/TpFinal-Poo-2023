@@ -3,6 +3,7 @@ package frontend.drawFigures;
 import backend.model.Circle;
 import backend.model.Point;
 import backend.model.Rectangle;
+import backend.model.Square;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -24,4 +25,29 @@ public class DrawRectangle extends DrawFigure {
         gc.strokeRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
                 Math.abs(rectangle.getTopLeft().getX() - rectangle.getBottomRight().getX()), Math.abs(rectangle.getTopLeft().getY() - rectangle.getBottomRight().getY()));
     }
+
+    @Override
+    public Rectangle getFigure(){
+        return rectangle;
+    }
+
+    @Override
+    public void move(double diffX, double diffY) {
+        rectangle.getTopLeft().x += diffX;
+        rectangle.getBottomRight().x += diffX;
+        rectangle.getTopLeft().y += diffY;
+        rectangle.getBottomRight().y += diffY;
+    }
+
+    @Override
+    public boolean belongs(Point eventPoint) {
+        return eventPoint.getX() > rectangle.getTopLeft().getX() && eventPoint.getX() < rectangle.getBottomRight().getX() &&
+                eventPoint.getY() > rectangle.getTopLeft().getY() && eventPoint.getY() < rectangle.getBottomRight().getY();
+    }
+
+    @Override
+    public String toString(){
+        return rectangle.toString();
+    }
+
 }
