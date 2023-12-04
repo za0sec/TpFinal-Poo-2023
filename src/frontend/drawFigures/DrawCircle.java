@@ -41,6 +41,12 @@ public class DrawCircle extends DrawFigure{
     }
 
     @Override
+    public void updatePreview(Point eventPoint) {
+        circle.setRadius(Math.abs(eventPoint.getX() - circle.getCenterPoint().getX()));
+    }
+
+
+    @Override
     public String toString(){
         return circle.toString();
     }

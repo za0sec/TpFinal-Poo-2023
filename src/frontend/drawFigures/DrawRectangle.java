@@ -46,6 +46,11 @@ public class DrawRectangle extends DrawFigure {
     }
 
     @Override
+    public void updatePreview(Point eventPoint) {
+        rectangle.setBottomRight(eventPoint);
+    }
+
+    @Override
     public String toString(){
         return rectangle.toString();
     }

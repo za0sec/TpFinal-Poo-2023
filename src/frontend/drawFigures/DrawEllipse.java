@@ -9,10 +9,12 @@ import javafx.scene.paint.Color;
 
 public class DrawEllipse extends DrawFigure{
 
-    Ellipse ellipse;
+    private Ellipse ellipse;
+    private final Point startPoint;
 
-    public DrawEllipse(Point centerPoint, double sMayorAxis, double sMinorAxis, GraphicsContext gc, Color fill, Color stroke) {
+    public DrawEllipse(Point startPoint ,Point centerPoint, double sMayorAxis, double sMinorAxis, GraphicsContext gc, Color fill, Color stroke) {
         super(gc, fill, stroke);
+        this.startPoint = startPoint;
         this.ellipse = new Ellipse(centerPoint, sMayorAxis, sMinorAxis);
     }
 
@@ -37,6 +39,11 @@ public class DrawEllipse extends DrawFigure{
     public boolean belongs(Point eventPoint) {
         return ((Math.pow(eventPoint.getX() - ellipse.getCenterPoint().getX(), 2) / Math.pow(ellipse.getsMayorAxis(), 2)) +
                 (Math.pow(eventPoint.getY() - ellipse.getCenterPoint().getY(), 2) / Math.pow(ellipse.getsMinorAxis(), 2))) <= 0.30;
+    }
+
+    @Override
+    public void updatePreview(Point eventPoint) {
+        ellipse.updateEllipse(startPoint ,eventPoint);
     }
 
     @Override

@@ -3,7 +3,7 @@ package backend.model;
 public class Circle implements Figure {
 
     protected final Point centerPoint;
-    protected final double radius;
+    protected double radius;
 
     public Circle(Point centerPoint, double radius) {
         this.centerPoint = centerPoint;
@@ -23,5 +23,8 @@ public class Circle implements Figure {
         return radius;
     }
 
+    public void setRadius(double newRadius){
+        this.radius = newRadius;
+    }
 
 }

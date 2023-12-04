@@ -22,4 +22,7 @@ public abstract class DrawFigure implements Figure {
 
     public abstract boolean belongs(Point eventPoint);
 
+    public abstract void updatePreview(Point eventPoint);
+
+
 }

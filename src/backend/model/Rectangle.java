@@ -2,7 +2,8 @@ package backend.model;
 
 public class Rectangle implements Figure {
 
-    private final Point topLeft, bottomRight;
+    private final Point topLeft;
+    private Point bottomRight;
 
     public Rectangle(Point topLeft, Point bottomRight) {
         this.topLeft = topLeft;
@@ -15,6 +16,10 @@ public class Rectangle implements Figure {
 
     public Point getBottomRight() {
         return bottomRight;
+    }
+
+    public void setBottomRight(Point bottomRight){
+        this.bottomRight = bottomRight;
     }
 
     @Override

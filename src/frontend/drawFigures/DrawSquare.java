@@ -43,6 +43,11 @@ public class DrawSquare extends DrawFigure{
     }
 
     @Override
+    public void updatePreview(Point eventPoint) {
+        square.setBottomRight(eventPoint);
+    }
+
+    @Override
     public String toString(){
         return square.toString();
     }

@@ -2,8 +2,8 @@ package backend.model;
 
 public class Ellipse implements Figure {
 
-    protected final Point centerPoint;
-    protected final double sMayorAxis, sMinorAxis;
+    protected Point centerPoint;
+    protected double sMayorAxis, sMinorAxis;
 
     public Ellipse(Point centerPoint, double sMayorAxis, double sMinorAxis) {
         this.centerPoint = centerPoint;
@@ -28,5 +28,10 @@ public class Ellipse implements Figure {
         return sMinorAxis;
     }
 
+    public void updateEllipse(Point startPoint, Point eventPoint){
+        this.centerPoint = new Point(Math.abs(eventPoint.x + startPoint.x) / 2, (Math.abs((eventPoint.y + startPoint.y)) / 2));
+        this.sMayorAxis = Math.abs(eventPoint.x - startPoint.x);
+        this.sMinorAxis = Math.abs(eventPoint.y - startPoint.y);
+    }
 
 }
