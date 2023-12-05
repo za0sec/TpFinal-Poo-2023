@@ -27,5 +27,9 @@ public class Rectangle implements Figure {
         return String.format("Rectángulo [ %s , %s ]", topLeft, bottomRight);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || (obj instanceof Rectangle that && that.topLeft.equals(topLeft) && that.bottomRight.equals(bottomRight));
+    }
 
 }

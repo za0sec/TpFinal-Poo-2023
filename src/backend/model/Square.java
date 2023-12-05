@@ -28,4 +28,9 @@ public class Square implements Figure {
         this.bottomRight = new Point(topLeft.x + size, topLeft.y + size);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || (obj instanceof Square that && that.topLeft.equals(topLeft) && that.bottomRight.equals(bottomRight));
+    }
+
 }

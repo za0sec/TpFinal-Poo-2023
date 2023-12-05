@@ -74,4 +74,9 @@ public class DrawCircle extends DrawFigure{
         return false;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || (obj instanceof DrawCircle that && that.circle.equals(circle));
+    }
+
 }

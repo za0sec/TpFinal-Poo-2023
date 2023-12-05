@@ -62,4 +62,10 @@ public class DrawRectangle extends DrawFigure {
                 && rectangle.getTopLeft().getY() < other.getBottomRight().getY()
                 && rectangle.getBottomRight().getY() > other.getTopLeft().getY();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || (obj instanceof DrawRectangle that && that.rectangle.equals(rectangle));
+    }
+
 }

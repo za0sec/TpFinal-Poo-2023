@@ -83,4 +83,9 @@ public class DrawEllipse extends DrawFigure{
         return false;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || (obj instanceof DrawEllipse that && that.ellipse.equals(ellipse));
+    }
+
 }

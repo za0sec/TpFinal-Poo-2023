@@ -1,5 +1,7 @@
 package backend.model;
 
+import frontend.drawFigures.DrawSquare;
+
 public class Circle implements Figure {
 
     protected final Point centerPoint;
@@ -25,6 +27,11 @@ public class Circle implements Figure {
 
     public void setRadius(double newRadius){
         this.radius = newRadius;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || (obj instanceof Circle that && that.centerPoint.equals(centerPoint) && that.radius == radius);
     }
 
 }

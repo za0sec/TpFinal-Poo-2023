@@ -1,7 +1,6 @@
 package backend;
 
 import backend.model.Figure;
-import frontend.drawFigures.DrawFigure;
 
 import java.util.*;
 
@@ -36,10 +35,17 @@ public class CanvasState<E extends Figure> {
         return toReturn;
     }
 
-    public void groupCreator(Set<E> figures){
+    public void gather(Set<E> figures){
         Set<E> mySet = getFigures(figures);
         for(E fig : figures){
-            figureGroups.putIfAbsent(fig, mySet);
+            figureGroups.put(fig, mySet);
+        }
+    }
+
+    public void unGather(Set<E> figures){
+        for (E figure : figures){
+            figureGroups.remove(figure);
+            groupSetter(figure);
         }
     }
 

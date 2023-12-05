@@ -34,4 +34,9 @@ public class Ellipse implements Figure {
         this.sMinorAxis = Math.abs(eventPoint.y - startPoint.y);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || (obj instanceof Ellipse that && that.centerPoint.equals(centerPoint) && that.sMinorAxis == sMinorAxis && that.sMayorAxis == sMayorAxis);
+    }
+
 }

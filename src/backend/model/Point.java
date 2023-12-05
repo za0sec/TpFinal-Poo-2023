@@ -22,4 +22,9 @@ public class Point {
         return String.format("{%.2f , %.2f}", x, y);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || (obj instanceof Point that && that.x == x && that.y == y);
+    }
+
 }

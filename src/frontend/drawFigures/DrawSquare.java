@@ -60,4 +60,8 @@ public class DrawSquare extends DrawFigure{
                 square.getBottomRight().getY() > other.getTopLeft().getY();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || (obj instanceof DrawSquare that && that.square.equals(square));
+    }
 }
