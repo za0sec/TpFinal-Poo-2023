@@ -12,4 +12,9 @@ public class DrawCircleButton implements Buttons{
         double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
         return new DrawCircle(startPoint, circleRadius, gc, fillColor, strokeColor);
     }
+
+    @Override
+    public boolean isDrawable() {
+        return true;
+    }
 }

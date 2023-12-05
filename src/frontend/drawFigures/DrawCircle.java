@@ -1,9 +1,6 @@
 package frontend.drawFigures;
 
-import backend.model.Circle;
-import backend.model.Ellipse;
-import backend.model.Point;
-import backend.model.Square;
+import backend.model.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -49,6 +46,32 @@ public class DrawCircle extends DrawFigure{
     @Override
     public String toString(){
         return circle.toString();
+    }
+
+    @Override
+    public boolean intersects(Rectangle other) {
+        Point center = circle.getCenterPoint();
+        double radius = circle.getRadius();
+
+        if (center.getX() >= other.getTopLeft().getX() && center.getX() <= other.getBottomRight().getX() &&
+                center.getY() >= other.getTopLeft().getY() && center.getY() <= other.getBottomRight().getY()) {
+            return true;
+        }
+
+        Point[] corners = {
+                other.getTopLeft(),
+                new Point(other.getTopLeft().getX(), other.getBottomRight().getY()),
+                other.getBottomRight(),
+                new Point(other.getBottomRight().getX(), other.getTopLeft().getY())
+        };
+
+        for (Point corner : corners) {
+            if (Math.sqrt(Math.pow(corner.getX() - center.getX(), 2) + Math.pow(corner.getY() - center.getY(), 2)) <= radius) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

@@ -6,15 +6,16 @@ import frontend.drawFigures.DrawRectangle;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class DrawRectangleButton implements Buttons{
+public class DrawMultiSelectionButton implements Buttons{
     @Override
     public DrawFigure execute(Point startPoint, Point endPoint, GraphicsContext gc, Color fillColor, Color strokeColor) {
-        return new DrawRectangle(startPoint, endPoint, gc, fillColor, strokeColor);
+        return new DrawRectangle(startPoint, endPoint, gc, Color.TRANSPARENT, strokeColor);
     }
 
     @Override
     public boolean isDrawable() {
-        return true;
+        return false;
     }
+
 
 }

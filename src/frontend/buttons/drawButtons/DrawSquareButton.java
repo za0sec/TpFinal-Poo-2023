@@ -13,4 +13,9 @@ public class DrawSquareButton implements Buttons {
         double size = Math.abs(endPoint.getX() - startPoint.getX());
         return new DrawSquare(startPoint, size, gc, fillColor, strokeColor);
     }
+
+    @Override
+    public boolean isDrawable() {
+        return true;
+    }
 }

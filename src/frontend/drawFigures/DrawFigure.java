@@ -2,6 +2,7 @@ package frontend.drawFigures;
 
 import backend.model.Figure;
 import backend.model.Point;
+import backend.model.Rectangle;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -23,6 +24,8 @@ public abstract class DrawFigure implements Figure {
     public abstract boolean belongs(Point eventPoint);
 
     public abstract void updatePreview(Point eventPoint);
+
+    public abstract boolean intersects(Rectangle other);
 
 
 }

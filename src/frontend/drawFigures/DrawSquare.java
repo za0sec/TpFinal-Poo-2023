@@ -2,6 +2,7 @@ package frontend.drawFigures;
 
 import backend.model.Circle;
 import backend.model.Point;
+import backend.model.Rectangle;
 import backend.model.Square;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -50,6 +51,13 @@ public class DrawSquare extends DrawFigure{
     @Override
     public String toString(){
         return square.toString();
+    }
+
+    public boolean intersects(Rectangle other) {
+        return square.getTopLeft().getX() < other.getBottomRight().getX() &&
+                square.getBottomRight().getX() > other.getTopLeft().getX() &&
+                square.getTopLeft().getY() < other.getBottomRight().getY() &&
+                square.getBottomRight().getY() > other.getTopLeft().getY();
     }
 
 }

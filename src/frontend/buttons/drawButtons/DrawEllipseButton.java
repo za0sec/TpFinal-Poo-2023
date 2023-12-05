@@ -14,4 +14,9 @@ public class DrawEllipseButton implements Buttons{
         double sMinorAxis = Math.abs(endPoint.y - startPoint.y);
         return new DrawEllipse(startPoint, centerPoint, sMayorAxis, sMinorAxis, gc, fillColor, strokeColor);
     }
+
+    @Override
+    public boolean isDrawable() {
+        return true;
+    }
 }

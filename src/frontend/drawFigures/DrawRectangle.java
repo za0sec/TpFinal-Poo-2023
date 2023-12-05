@@ -55,4 +55,11 @@ public class DrawRectangle extends DrawFigure {
         return rectangle.toString();
     }
 
+    @Override
+    public boolean intersects(Rectangle other) {
+        return rectangle.getTopLeft().getX() < other.getBottomRight().getX()
+                && rectangle.getBottomRight().getX() > other.getTopLeft().getX()
+                && rectangle.getTopLeft().getY() < other.getBottomRight().getY()
+                && rectangle.getBottomRight().getY() > other.getTopLeft().getY();
+    }
 }

@@ -51,4 +51,36 @@ public class DrawEllipse extends DrawFigure{
         return ellipse.toString();
     }
 
+    @Override
+    public boolean intersects(Rectangle selectionRectangle) {
+
+        Point center = ellipse.getCenterPoint();
+        if (center.getX() >= selectionRectangle.getTopLeft().getX() &&
+                center.getX() <= selectionRectangle.getBottomRight().getX() &&
+                center.getY() >= selectionRectangle.getTopLeft().getY() &&
+                center.getY() <= selectionRectangle.getBottomRight().getY()) {
+            return true;
+        }
+
+        Point[] corners = {
+                selectionRectangle.getTopLeft(),
+                new Point(selectionRectangle.getTopLeft().getX(), selectionRectangle.getBottomRight().getY()),
+                selectionRectangle.getBottomRight(),
+                new Point(selectionRectangle.getBottomRight().getX(), selectionRectangle.getTopLeft().getY())
+        };
+
+        double rx = ellipse.getsMayorAxis() / 2.0; // Radio en el eje X
+        double ry = ellipse.getsMinorAxis() / 2.0; // Radio en el eje Y
+        for (Point corner : corners) {
+            double dx = (corner.getX() - center.getX()) / rx;
+            double dy = (corner.getY() - center.getY()) / ry;
+            if (dx * dx + dy * dy <= 1) {
+                return true;
+            }
+        }
+
+
+        return false;
+    }
+
 }
