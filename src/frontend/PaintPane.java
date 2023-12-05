@@ -27,14 +27,14 @@ public class PaintPane extends BorderPane {
 	Color defaultFillColor = Color.YELLOW;
 
 	// Botones Barra Izquierda
-	ToggleButton multiSelection = new ToggleButton("MultiSelection");
+	ToggleButton multiSelection = new ToggleButton("Selection");
 	ToggleButton rectangleButton = new ToggleButton("Rectangle");
 	ToggleButton circleButton = new ToggleButton("Circle");
 	ToggleButton squareButton = new ToggleButton("Square");
 	ToggleButton ellipseButton = new ToggleButton("Ellipse");
 	ToggleButton deleteButton = new ToggleButton("Delete");
-	ToggleButton gather = new ToggleButton("Gather");
-	ToggleButton unGather = new ToggleButton("Ungather");
+	ToggleButton gatherButton = new ToggleButton("Gather");
+	ToggleButton unGatherButton = new ToggleButton("Ungather");
 
 	// Selector de color de relleno
 	ColorPicker fillColorPicker = new ColorPicker(defaultFillColor);
@@ -62,7 +62,7 @@ public class PaintPane extends BorderPane {
 	public PaintPane(CanvasState<DrawFigure> canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
-		ToggleButton[] toolsArr = {multiSelection, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton};
+		ToggleButton[] toolsArr = {multiSelection, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton, gatherButton};
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
@@ -173,9 +173,11 @@ public class PaintPane extends BorderPane {
 				double diffX = (eventPoint.getX() - startPoint.getX()) / 150;
 				double diffY = (eventPoint.getY() - startPoint.getY()) / 150;
 				if (!selectedFigures.isEmpty()) {
-					for(DrawFigure figure : selectedFigures) {
-						figure.move(diffX, diffY);
-						redrawCanvas();
+					Set<DrawFigure> toSet = new HashSet<>(selectedFigures);
+					Set<DrawFigure> groups = canvasState.getFigures(toSet);
+					for(DrawFigure figure : groups) {
+							figure.move(diffX, diffY);
+							redrawCanvas();
 					}
 				}
 			}
@@ -192,6 +194,19 @@ public class PaintPane extends BorderPane {
 					figure = null;
 					redrawCanvas();
 				}
+			}
+		});
+
+		gatherButton.setOnAction(event -> {
+			if (!selectedFigures.isEmpty()) {
+				Set<DrawFigure> toSet = new HashSet<>(selectedFigures);
+				StringBuilder toShow = new StringBuilder("Se agruparon: ");
+				for (DrawFigure figure : selectedFigures) {
+					canvasState.groupCreator(toSet);
+					toShow.append(figure);
+					redrawCanvas();
+				}
+				statusPane.updateStatus(toShow.toString());
 			}
 		});
 
