@@ -65,6 +65,14 @@ public class DrawRectangle extends DrawFigure {
     }
 
     @Override
+    public void setShadow(boolean value) {
+        super.setShadow(value);
+        if (isShadow){
+            rectangleShadow(rectangle);
+        }
+    }
+
+    @Override
     public boolean equals(Object obj) {
         return this == obj || (obj instanceof DrawRectangle that && that.rectangle.equals(rectangle));
     }

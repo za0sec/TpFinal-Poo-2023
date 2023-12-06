@@ -6,10 +6,13 @@ import backend.model.Rectangle;
 import backend.model.Square;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.RadialGradient;
+import javafx.scene.paint.Stop;
 
 public class DrawEllipse extends DrawFigure{
 
-    private Ellipse ellipse;
+    protected Ellipse ellipse;
     private final Point startPoint;
 
     public DrawEllipse(Point startPoint ,Point centerPoint, double sMayorAxis, double sMinorAxis, GraphicsContext gc, Color fill, Color stroke) {
@@ -20,6 +23,7 @@ public class DrawEllipse extends DrawFigure{
 
     @Override
     public void draw() {
+        setGradient(isGradient, fill);
         super.draw();
         gc.strokeOval(ellipse.getCenterPoint().getX() - (ellipse.getsMayorAxis() / 2), ellipse.getCenterPoint().getY() - (ellipse.getsMinorAxis() / 2), ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
         gc.fillOval(ellipse.getCenterPoint().getX() - (ellipse.getsMayorAxis() / 2), ellipse.getCenterPoint().getY() - (ellipse.getsMinorAxis() / 2), ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
@@ -85,8 +89,37 @@ public class DrawEllipse extends DrawFigure{
     }
 
     @Override
+    public void setShadow(boolean value) {
+        super.setShadow(value);
+        if (isShadow) {
+            double shadowOffsetX = 10.0;
+            double shadowOffsetY = 10.0;
+            Ellipse shadow = new Ellipse(ellipse.getCenterPoint(), ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
+
+            gc.setFill(Color.GRAY);
+            gc.fillOval(
+                    shadow.getCenterPoint().getX() - (shadow.getsMayorAxis() / 2) + shadowOffsetX,
+                    shadow.getCenterPoint().getY() - (shadow.getsMinorAxis() / 2) + shadowOffsetY,
+                    shadow.getsMayorAxis(),
+                    shadow.getsMinorAxis()
+            );
+        }
+    }
+
+
+    @Override
     public boolean equals(Object obj) {
         return this == obj || (obj instanceof DrawEllipse that && that.ellipse.equals(ellipse));
+    }
+
+    @Override
+    public void setGradient(boolean value, Color fillColor){
+        super.setGradient(value, fill);
+            RadialGradient radialGradient = new RadialGradient(0, 0, 0.5, 0.5, 0.5, true,
+                    CycleMethod.NO_CYCLE,
+                    new Stop(0, fillColor),
+                    new Stop(1, fillColor.invert()));
+            gc.setFill(radialGradient);
     }
 
 }

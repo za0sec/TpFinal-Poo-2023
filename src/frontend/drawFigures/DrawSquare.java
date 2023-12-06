@@ -63,7 +63,17 @@ public class DrawSquare extends DrawFigure{
     }
 
     @Override
+    public void setShadow(boolean value) {
+        super.setShadow(value);
+        if (isShadow){
+            rectangleShadow(new Rectangle(square.getTopLeft(), square.getBottomRight()));
+        }
+    }
+
+    @Override
     public boolean equals(Object obj) {
         return this == obj || (obj instanceof DrawSquare that && that.square.equals(square));
     }
+
+
 }

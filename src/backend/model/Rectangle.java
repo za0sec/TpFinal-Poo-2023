@@ -32,4 +32,5 @@ public class Rectangle implements Figure {
         return this == obj || (obj instanceof Rectangle that && that.topLeft.equals(topLeft) && that.bottomRight.equals(bottomRight));
     }
 
+
 }

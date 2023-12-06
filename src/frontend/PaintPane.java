@@ -5,11 +5,13 @@ import backend.model.*;
 import frontend.buttons.drawButtons.*;
 import frontend.drawFigures.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -36,6 +38,10 @@ public class PaintPane extends BorderPane {
 	ToggleButton gatherButton = new ToggleButton("Agrupar");
 	ToggleButton unGatherButton = new ToggleButton("Desagrupar");
 
+	CheckBox shadowBox = new CheckBox("Sombra");
+	CheckBox gradientBox = new CheckBox("Gradiente");
+	CheckBox beveledBox = new CheckBox("Biselado");
+
 	// Selector de color de relleno
 	ColorPicker fillColorPicker = new ColorPicker(defaultFillColor);
 
@@ -44,6 +50,8 @@ public class PaintPane extends BorderPane {
 
 	// Seleccionar una figura
 	Set<DrawFigure> selectedFigures = new HashSet<>();
+
+	ArrayList<Boolean> status = new ArrayList<>();
 
 	//Figura temporal
 	private DrawFigure previewFigure;
@@ -75,13 +83,22 @@ public class PaintPane extends BorderPane {
 		ellipseButton.setUserData(new DrawEllipseButton());
 		multiSelection.setUserData(new DrawMultiSelectionButton());
 
+
+		// Crear HBox para CheckBoxes
+		HBox checkBoxHBox = new HBox(10, new Label("Efectos: "), shadowBox, gradientBox, beveledBox);
+		CheckBox[] boxArr = {shadowBox, gradientBox, beveledBox};
+		checkBoxHBox.setPadding(new Insets(5));
+		checkBoxHBox.setStyle("-fx-background-color: #999");
+		checkBoxHBox.setAlignment(Pos.CENTER);
+
+		// Crear VBox para botones
 		VBox buttonsBox = new VBox(10);
 		buttonsBox.getChildren().addAll(toolsArr);
 		buttonsBox.getChildren().add(fillColorPicker);
 		buttonsBox.setPadding(new Insets(5));
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
-		gc.setLineWidth(1);
+
 
 		canvas.setOnMousePressed(event -> {
 			startPoint = new Point(event.getX(), event.getY());
@@ -91,6 +108,8 @@ public class PaintPane extends BorderPane {
 				Buttons buttons = (Buttons) selectedToggle.getUserData();
 				if (buttons != null) {
 					previewFigure = buttons.execute(startPoint, startPoint, gc, fillColorPicker.getValue(), Color.BLACK);
+					previewFigure.setStatus(shadowBox.isSelected(), gradientBox.isSelected(), beveledBox.isSelected());
+					previewFigure.draw();
 				}
 			}
 		});
@@ -105,15 +124,15 @@ public class PaintPane extends BorderPane {
 			}
 			DrawFigure newFigure = null;
 			Toggle selectedToggle = tools.getSelectedToggle();
-			if (selectedToggle != null) {
 				Buttons buttons = (Buttons) selectedToggle.getUserData();
-				if (buttons != null && buttons.isDrawable() && !isSelected) {
+				if (!multiSelection.isSelected() && buttons.isDrawable() && !isSelected) {
 					newFigure = buttons.execute(startPoint, endPoint, gc, defaultFillColor, Color.BLACK);
+					newFigure.setStatus(shadowBox.isSelected(), gradientBox.isSelected(), beveledBox.isSelected());
+					newFigure.draw();
 					figureColorMap.put(newFigure, fillColorPicker.getValue());
 					canvasState.addFigure(newFigure);
 					startPoint = null;
 				}
-			}
 		});
 
 		multiSelection.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -147,13 +166,18 @@ public class PaintPane extends BorderPane {
 			isSelected = false;
 			statusPane.updateStatus("Ninguna figura encontrada");
 			selectedFigures.clear();
+
 			if(multiSelection.isSelected()) {
 				StringBuilder label = new StringBuilder("Se seleccionó: ");
 				for (DrawFigure figure : canvasState.figures()) {
 					if(figure.intersects((Rectangle) previewFigure.getFigure())) {
 						selectedFigures.add(figure);
+						status =  figure.getStatus();
 					}
 				}
+				for (int i=0; i< status.size(); i++)
+					boxArr[i].setSelected(status.get(i));
+
 				label.append(canvasState.getFigures(selectedFigures));
 				if (!selectedFigures.isEmpty()) {
 					statusPane.updateStatus(label.toString());
@@ -223,6 +247,24 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
+		shadowBox.setOnAction(event -> {
+			if (!selectedFigures.isEmpty()){
+				for (DrawFigure figure : canvasState.getFigures(selectedFigures)){
+					figure.setShadow(shadowBox.isSelected());
+					redrawCanvas(figure);
+				}
+			}
+		});
+		gradientBox.setOnAction(event -> {
+			if (!selectedFigures.isEmpty()){
+				for (DrawFigure figure : canvasState.getFigures(selectedFigures)){
+					figure.setGradient(gradientBox.isSelected(), fillColorPicker.getValue());
+					redrawCanvas(figure);
+				}
+			}
+		});
+
+		setTop(checkBoxHBox);
 		setLeft(buttonsBox);
 		setRight(canvas);
 	}
