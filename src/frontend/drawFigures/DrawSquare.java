@@ -23,6 +23,7 @@ public class DrawSquare extends DrawFigure{
                 Math.abs(square.getTopLeft().getX() - square.getBottomRight().getX()), Math.abs(square.getTopLeft().getY() - square.getBottomRight().getY()));
         gc.strokeRect(square.getTopLeft().getX(), square.getTopLeft().getY(),
                 Math.abs(square.getTopLeft().getX() - square.getBottomRight().getX()), Math.abs(square.getTopLeft().getY() - square.getBottomRight().getY()));
+
     }
 
     @Override

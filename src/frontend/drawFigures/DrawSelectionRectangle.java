@@ -4,8 +4,8 @@ import backend.model.Point;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class SelectionRectangle extends DrawRectangle{
-    public SelectionRectangle(Point topLeft, Point bottomRight, GraphicsContext gc, Color fill, Color stroke) {
+public class DrawSelectionRectangle extends DrawRectangle{
+    public DrawSelectionRectangle(Point topLeft, Point bottomRight, GraphicsContext gc, Color fill, Color stroke) {
         super(topLeft, bottomRight, gc, fill, stroke);
 
     }

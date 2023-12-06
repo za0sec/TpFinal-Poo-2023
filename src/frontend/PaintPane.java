@@ -158,8 +158,7 @@ public class PaintPane extends BorderPane {
 				if (!selectedFigures.isEmpty()) {
 					statusPane.updateStatus(label.toString());
 					isSelected = true;
-			} //else {
-//				}
+			}
 				previewFigure = null;
 				redrawCanvas(selectedFigures);
 			}
@@ -174,7 +173,7 @@ public class PaintPane extends BorderPane {
 					Set<DrawFigure> groups = canvasState.getFigures(selectedFigures);
 					for(DrawFigure figure : groups) {
 							figure.move(diffX, diffY);
-							redrawCanvas(figure);
+							redrawCanvas(selectedFigures);
 					}
 				}
 			}
@@ -189,10 +188,12 @@ public class PaintPane extends BorderPane {
 				selectedFigures = canvasState.getFigures(selectedFigures);
 				for (DrawFigure figure : selectedFigures) {
 					canvasState.deleteFigure(figure);
-					figure = null;
 					redrawCanvas(figure);
+					figure = null;
 				}
+				pressSelected();
 			}
+
 		});
 
 
@@ -204,6 +205,7 @@ public class PaintPane extends BorderPane {
 				canvasState.gather(selectedFigures);
 				redrawCanvas(selectedFigures);
 				statusPane.updateStatus(toShow.toString());
+				pressSelected();
 			}
 		});
 
@@ -217,6 +219,7 @@ public class PaintPane extends BorderPane {
 				redrawCanvas(selectedFigures);
 				statusPane.updateStatus(toShow.toString());
 				selectedFigures.clear();
+				pressSelected();
 			}
 		});
 
@@ -224,34 +227,35 @@ public class PaintPane extends BorderPane {
 		setRight(canvas);
 	}
 
+	private void pressSelected(){
+		multiSelection.requestFocus();
+		multiSelection.fire();
+	}
+
 	void redrawCanvas(DrawFigure figure){
 		redrawCanvas(Set.of(figure));
 	}
 
-	void redrawCanvas(Set<DrawFigure> figures) {
-		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+	void redrawCanvas(Set<DrawFigure> figures){
 		Set<DrawFigure> preDraw = canvasState.figuresSet();
-		preDraw.removeAll(figures);
-		for(DrawFigure figure : preDraw) {
-			//Set<DrawFigure> groups = canvasState.getFigures(selectedFigures);
-//			for (DrawFigure selectedFigure : preDraw) {
-//				if (figure.equals(selectedFigure) && isSelected)
-//					gc.setStroke(Color.RED);
-//			}
-			gc.setFill(figureColorMap.get(figure));
-			gc.setStroke(lineColor);
-			figure.draw();
+		if (isSelected){
+			setCanvas(preDraw);
+			return;
 		}
+		preDraw.removeAll(figures);
+		setCanvas(preDraw);
+	}
 
+	private void setCanvas(Set<DrawFigure> figures) {
+		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for(DrawFigure figure : figures) {
 			Set<DrawFigure> groups = canvasState.getFigures(selectedFigures);
-			for (DrawFigure selectedFigure : groups) {
-				if (figure.equals(selectedFigure) && isSelected)
-					gc.setStroke(Color.RED);
-			}
 			gc.setFill(figureColorMap.get(figure));
-			figure.draw();
 			gc.setStroke(lineColor);
+			if (groups.contains(figure) && isSelected) {
+				gc.setStroke(Color.RED);
+			}
+			figure.draw();
 		}
 		if (previewFigure != null) {
 			gc.setFill(fillColorPicker.getValue());
