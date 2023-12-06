@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 public class DrawRectangle extends DrawFigure {
 
 
-    private Rectangle rectangle;
+    protected Rectangle rectangle;
 
 
     public DrawRectangle(Point topLeft, Point bottomRight, GraphicsContext gc, Color fill, Color stroke) {
@@ -20,6 +20,7 @@ public class DrawRectangle extends DrawFigure {
 
     @Override
     public void draw() {
+        super.draw();
         gc.fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
                 Math.abs(rectangle.getTopLeft().getX() - rectangle.getBottomRight().getX()), Math.abs(rectangle.getTopLeft().getY() - rectangle.getBottomRight().getY()));
         gc.strokeRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),

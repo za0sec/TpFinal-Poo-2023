@@ -15,6 +15,7 @@ public class DrawCircle extends DrawFigure{
 
     @Override
     public void draw() {
+        super.draw();
         double diameter = circle.getRadius() * 2;
         gc.fillOval(circle.getCenterPoint().getX() - circle.getRadius(), circle.getCenterPoint().getY() - circle.getRadius(), diameter, diameter);
         gc.strokeOval(circle.getCenterPoint().getX() - circle.getRadius(), circle.getCenterPoint().getY() - circle.getRadius(), diameter, diameter);

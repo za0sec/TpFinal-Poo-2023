@@ -9,13 +9,18 @@ import javafx.scene.paint.Color;
 public abstract class DrawFigure implements Figure {
 
     protected final GraphicsContext gc;
+
+    protected Color fill;
+
     public DrawFigure(GraphicsContext gc, Color fill, Color stroke){
         this.gc = gc;
-        gc.setFill(fill);
-        gc.setStroke(stroke);
+        this.fill = fill;
     }
 
-    public abstract void draw();
+    public void draw(){
+        gc.setLineDashes(null);
+        gc.setFill(fill);
+    };
 
     public abstract Figure getFigure();
 
