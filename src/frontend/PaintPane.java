@@ -110,7 +110,6 @@ public class PaintPane extends BorderPane {
 					previewFigure = buttons.execute(startPoint, startPoint, gc, fillColorPicker.getValue(), Color.BLACK);
 					previewFigure.setStatus(shadowBox.isSelected(), gradientBox.isSelected(), beveledBox.isSelected());
 					previewFigure.draw();
-					System.out.println("asdasdadsds");
 				}
 			}
 		});
@@ -248,7 +247,6 @@ public class PaintPane extends BorderPane {
 				pressSelected();
 			}
 		});
-
 		shadowBox.setOnAction(event -> {
 			if (!selectedFigures.isEmpty()){
 				for (DrawFigure figure : canvasState.getFigures(selectedFigures)){
@@ -318,5 +316,4 @@ public class PaintPane extends BorderPane {
 			previewFigure.draw();
 		}
 	}
-
 }
