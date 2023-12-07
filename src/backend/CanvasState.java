@@ -63,4 +63,5 @@ public class CanvasState<E extends Figure> {
         figureGroups.put(figure, mySet);
     }
 
+
 }

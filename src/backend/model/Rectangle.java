@@ -2,7 +2,7 @@ package backend.model;
 
 public class Rectangle implements Figure {
 
-    private final Point topLeft;
+    private Point topLeft;
     private Point bottomRight;
 
     public Rectangle(Point topLeft, Point bottomRight) {
@@ -18,6 +18,10 @@ public class Rectangle implements Figure {
         return bottomRight;
     }
 
+    public void setTopLeft(Point topLeft){
+        this.topLeft = topLeft;
+    }
+
     public void setBottomRight(Point bottomRight){
         this.bottomRight = bottomRight;
     }
@@ -31,6 +35,5 @@ public class Rectangle implements Figure {
     public boolean equals(Object obj) {
         return this == obj || (obj instanceof Rectangle that && that.topLeft.equals(topLeft) && that.bottomRight.equals(bottomRight));
     }
-
 
 }

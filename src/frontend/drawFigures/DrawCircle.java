@@ -9,7 +9,7 @@ import javafx.scene.paint.Stop;
 
 public class DrawCircle extends DrawFigure{
 
-    private final Circle circle;
+    private Circle circle;
 
     public DrawCircle(Point centerPoint, double radius, GraphicsContext gc, Color fill, Color stroke) {
         super(gc, fill, stroke);
@@ -81,6 +81,25 @@ public class DrawCircle extends DrawFigure{
     @Override
     public void setGradient(boolean value, Color fillColor) {
         super.setGradient(value, fillColor);
+    }
+
+    @Override
+    public void rotate() {
+
+    }
+
+    @Override
+    public void enlarge() {
+        Ellipse ellipse = new Ellipse(circle.getCenterPoint(), circle.getRadius(), circle.getRadius());
+        super.resizeOvals(ellipse, 1.25);
+        this.circle = new Circle(ellipse.getCenterPoint(), ellipse.getsMayorAxis());
+    }
+
+    @Override
+    public void reduce() {
+        Ellipse ellipse = new Ellipse(circle.getCenterPoint(), circle.getRadius(), circle.getRadius());
+        super.resizeOvals(ellipse, 0.75);
+        this.circle = new Circle(ellipse.getCenterPoint(), ellipse.getsMayorAxis());
     }
 
     @Override

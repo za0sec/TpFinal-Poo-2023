@@ -82,6 +82,25 @@ public class DrawRectangle extends DrawFigure {
     }
 
     @Override
+    public void rotate() {
+        Point centerPoint = new Point((rectangle.getTopLeft().getX() + rectangle.getBottomRight().getX())/2 , (rectangle.getBottomRight().getY() + rectangle.getTopLeft().getY())/2);
+        Point newTopLeft = new Point(centerPoint.getX() - ((rectangle.getBottomRight().getY() - rectangle.getTopLeft().getY())/2) , centerPoint.getY() - ((rectangle.getBottomRight().getX() - rectangle.getTopLeft().getX())/2));
+        Point newBottomRight = new Point(centerPoint.getX() + ((rectangle.getBottomRight().getY() - rectangle.getTopLeft().getY())/2), centerPoint.getY() + ((rectangle.getBottomRight().getX() - rectangle.getTopLeft().getX())/2));
+        Rectangle rotatedRectangle = new Rectangle(newTopLeft, newBottomRight);
+        this.rectangle = rotatedRectangle;
+    }
+
+    @Override
+    public void enlarge() {
+        super.resizeRectangle(rectangle, 1.125);
+    }
+
+    @Override
+    public void reduce() {
+        super.resizeRectangle(rectangle, 0.875);
+    }
+
+    @Override
     public void setBeveled(boolean value) {
         super.setBeveled(value);
         rectangleBeveled(rectangle);

@@ -37,6 +37,9 @@ public class PaintPane extends BorderPane {
 	ToggleButton deleteButton = new ToggleButton("Borrar");
 	ToggleButton gatherButton = new ToggleButton("Agrupar");
 	ToggleButton unGatherButton = new ToggleButton("Desagrupar");
+	ToggleButton rotateButton = new ToggleButton("Girar D");
+	ToggleButton enlargeButton = new ToggleButton("Escalar +");
+	ToggleButton reduceButton = new ToggleButton("Escalar -");
 
 	CheckBox shadowBox = new CheckBox("Sombra");
 	CheckBox gradientBox = new CheckBox("Gradiente");
@@ -70,7 +73,7 @@ public class PaintPane extends BorderPane {
 	public PaintPane(CanvasState<DrawFigure> canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
-		ToggleButton[] toolsArr = {multiSelection, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton, gatherButton, unGatherButton};
+		ToggleButton[] toolsArr = {multiSelection, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton, gatherButton, unGatherButton, rotateButton, enlargeButton, reduceButton};
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
@@ -98,7 +101,6 @@ public class PaintPane extends BorderPane {
 		buttonsBox.setPadding(new Insets(5));
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
-
 
 		canvas.setOnMousePressed(event -> {
 			startPoint = new Point(event.getX(), event.getY());
@@ -240,13 +242,53 @@ public class PaintPane extends BorderPane {
 				selectedFigures = canvasState.getFigures(selectedFigures);
 				toShow.append(selectedFigures);
 				canvasState.unGather(selectedFigures);
-				isSelected = false;
 				redrawCanvas(selectedFigures);
+				isSelected = false;
 				statusPane.updateStatus(toShow.toString());
 				selectedFigures.clear();
 				pressSelected();
 			}
 		});
+
+		rotateButton.setOnAction(event -> {
+			if(!selectedFigures.isEmpty()){
+				StringBuilder toShow = new StringBuilder("Se rotó: ");
+				selectedFigures = canvasState.getFigures(selectedFigures);
+				toShow.append(selectedFigures);
+				for(DrawFigure fig : selectedFigures){
+					fig.rotate();
+					redrawCanvas(selectedFigures);
+				}
+				statusPane.updateStatus(toShow.toString());
+			}
+		});
+
+		enlargeButton.setOnAction(event -> {
+			if(!selectedFigures.isEmpty()){
+				StringBuilder toShow = new StringBuilder("Se agrandó un 25%: ");
+				selectedFigures = canvasState.getFigures(selectedFigures);
+				toShow.append(selectedFigures);
+				for(DrawFigure fig : selectedFigures){
+					fig.enlarge();
+					redrawCanvas(selectedFigures);
+				}
+				statusPane.updateStatus(toShow.toString());
+			}
+		});
+
+		reduceButton.setOnAction(event -> {
+			if(!selectedFigures.isEmpty()){
+				StringBuilder toShow = new StringBuilder("Se achicó un 25%: ");
+				selectedFigures = canvasState.getFigures(selectedFigures);
+				toShow.append(selectedFigures);
+				for(DrawFigure fig : selectedFigures){
+					fig.reduce();
+					redrawCanvas(selectedFigures);
+				}
+				statusPane.updateStatus(toShow.toString());
+			}
+		});
+
 		shadowBox.setOnAction(event -> {
 			if (!selectedFigures.isEmpty()){
 				for (DrawFigure figure : canvasState.getFigures(selectedFigures)){

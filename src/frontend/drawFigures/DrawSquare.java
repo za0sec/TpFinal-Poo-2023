@@ -6,10 +6,11 @@ import backend.model.Rectangle;
 import backend.model.Square;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import org.w3c.dom.css.Rect;
 
 public class DrawSquare extends DrawFigure{
 
-    private final Square square;
+    private Square square;
 
     public DrawSquare(Point topLeft, double size, GraphicsContext gc, Color fill, Color stroke) {
         super(gc, fill, stroke);
@@ -73,6 +74,25 @@ public class DrawSquare extends DrawFigure{
     @Override
     public void setGradient(boolean value, Color fillColor) {
         setRectangleGradient(value, fillColor);
+    }
+
+    @Override
+    public void rotate() {
+
+    }
+
+    @Override
+    public void enlarge() {
+        Rectangle rectangle = new Rectangle(square.getTopLeft(), square.getBottomRight());
+        resizeRectangle(rectangle, 1.125);
+        this.square = new Square(rectangle.getTopLeft(), rectangle.getBottomRight().getX() - rectangle.getTopLeft().getX());
+    }
+
+    @Override
+    public void reduce() {
+        Rectangle rectangle = new Rectangle(square.getTopLeft(), square.getBottomRight());
+        resizeRectangle(rectangle, 0.875);
+        this.square = new Square(rectangle.getTopLeft(), rectangle.getBottomRight().getX() - rectangle.getTopLeft().getX());
     }
 
     @Override

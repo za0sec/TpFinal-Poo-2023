@@ -134,5 +134,16 @@ public abstract class DrawFigure implements Figure {
         }
     }
 
+    public abstract void rotate();
+    public void resizeOvals(Ellipse ellipse, double percentage){
+        ellipse.setAxis(ellipse.getsMayorAxis() * percentage, ellipse.getsMinorAxis() * percentage);
+    }
 
+    protected void resizeRectangle(Rectangle rectangle, double percentage){
+        Point centerPoint = new Point((rectangle.getTopLeft().getX() + rectangle.getBottomRight().getX())/2 , (rectangle.getBottomRight().getY() + rectangle.getTopLeft().getY())/2);
+        rectangle.setTopLeft(new Point(centerPoint.getX() - (((rectangle.getBottomRight().getX() - rectangle.getTopLeft().getX()) * percentage)/2), centerPoint.getY() - (((rectangle.getBottomRight().getY() - rectangle.getTopLeft().getY()) * percentage)/2)));
+        rectangle.setBottomRight(new Point(centerPoint.getX() + (((rectangle.getBottomRight().getX() - rectangle.getTopLeft().getX()) * percentage)/2), centerPoint.getY() + (((rectangle.getBottomRight().getY() - rectangle.getTopLeft().getY()) * percentage)/2)));
+    }
+    public abstract void enlarge();
+    public abstract void reduce();
 }
