@@ -110,6 +110,7 @@ public class PaintPane extends BorderPane {
 					previewFigure = buttons.execute(startPoint, startPoint, gc, fillColorPicker.getValue(), Color.BLACK);
 					previewFigure.setStatus(shadowBox.isSelected(), gradientBox.isSelected(), beveledBox.isSelected());
 					previewFigure.draw();
+					System.out.println("asdasdadsds");
 				}
 			}
 		});
@@ -126,7 +127,7 @@ public class PaintPane extends BorderPane {
 			Toggle selectedToggle = tools.getSelectedToggle();
 				Buttons buttons = (Buttons) selectedToggle.getUserData();
 				if (!multiSelection.isSelected() && buttons.isDrawable() && !isSelected) {
-					newFigure = buttons.execute(startPoint, endPoint, gc, defaultFillColor, Color.BLACK);
+					newFigure = buttons.execute(startPoint, endPoint, gc, fillColorPicker.getValue(), Color.BLACK);
 					newFigure.setStatus(shadowBox.isSelected(), gradientBox.isSelected(), beveledBox.isSelected());
 					newFigure.draw();
 					figureColorMap.put(newFigure, fillColorPicker.getValue());
@@ -139,6 +140,7 @@ public class PaintPane extends BorderPane {
 			if (newValue) {
 				previousColor = fillColorPicker.getValue();
 				fillColorPicker.setValue(Color.TRANSPARENT);
+
 			} else {
 				fillColorPicker.setValue(previousColor);
 			}
@@ -252,6 +254,7 @@ public class PaintPane extends BorderPane {
 				for (DrawFigure figure : canvasState.getFigures(selectedFigures)){
 					figure.setShadow(shadowBox.isSelected());
 					redrawCanvas(figure);
+					pressSelected();
 				}
 			}
 		});
@@ -260,9 +263,20 @@ public class PaintPane extends BorderPane {
 				for (DrawFigure figure : canvasState.getFigures(selectedFigures)){
 					figure.setGradient(gradientBox.isSelected(), fillColorPicker.getValue());
 					redrawCanvas(figure);
+					pressSelected();
 				}
 			}
 		});
+		beveledBox.setOnAction(event -> {
+			if (!selectedFigures.isEmpty()){
+				for (DrawFigure figure : canvasState.getFigures(selectedFigures)){
+					figure.setBeveled(beveledBox.isSelected());
+					redrawCanvas(figure);
+					pressSelected();
+				}
+			}
+		});
+
 
 		setTop(checkBoxHBox);
 		setLeft(buttonsBox);

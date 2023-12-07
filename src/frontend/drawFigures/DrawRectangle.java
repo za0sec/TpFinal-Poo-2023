@@ -5,7 +5,7 @@ import backend.model.Point;
 import backend.model.Rectangle;
 import backend.model.Square;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import javafx.scene.paint.*;
 
 public class DrawRectangle extends DrawFigure {
 
@@ -77,4 +77,13 @@ public class DrawRectangle extends DrawFigure {
         return this == obj || (obj instanceof DrawRectangle that && that.rectangle.equals(rectangle));
     }
 
+    public void setGradient(boolean value, Color fillColor){
+        setRectangleGradient(value, fillColor);
+    }
+
+    @Override
+    public void setBeveled(boolean value) {
+        super.setBeveled(value);
+        rectangleBeveled(rectangle);
+    }
 }

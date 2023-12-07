@@ -6,17 +6,15 @@ import frontend.drawFigures.DrawFigure;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class DrawCircleButton extends DrawEllipseButton {
+public class DrawCircleButton implements Buttons{
     @Override
     public DrawFigure execute(Point startPoint, Point endPoint, GraphicsContext gc, Color fillColor, Color strokeColor) {
-        // Calcula el radio del círculo como la mitad de la distancia horizontal
-        // entre startPoint y endPoint
-        double circleRadius = Math.abs(endPoint.getX() - startPoint.getX()) / 2;
-
-        // El centro del círculo está a 'radio' distancia del startPoint en la dirección x
-        Point centerPoint = new Point(startPoint.getX() + circleRadius, startPoint.getY() + circleRadius);
-
-        return new DrawCircle(centerPoint, circleRadius, gc, fillColor, strokeColor);
+        double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
+        return new DrawCircle(startPoint, circleRadius, gc, fillColor, strokeColor);
     }
 
+    @Override
+    public boolean isDrawable() {
+        return true;
+    }
 }

@@ -71,6 +71,11 @@ public class DrawSquare extends DrawFigure{
     }
 
     @Override
+    public void setGradient(boolean value, Color fillColor) {
+        setRectangleGradient(value, fillColor);
+    }
+
+    @Override
     public boolean equals(Object obj) {
         return this == obj || (obj instanceof DrawSquare that && that.square.equals(square));
     }
