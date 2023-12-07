@@ -121,6 +121,16 @@ public class DrawEllipse extends DrawFigure{
     }
 
     @Override
+    public void mirrorH() {
+        super.mirrorOvals(ellipse, true);
+    }
+
+    @Override
+    public void mirrorV() {
+        super.mirrorOvals(ellipse, false);
+    }
+
+    @Override
     public void setBeveled(boolean value) {
         super.setBeveled(value);
         super.setOvalBeveled(ellipse.getCenterPoint(), ellipse.getsMayorAxis() / 2, ellipse.getsMinorAxis() / 2);

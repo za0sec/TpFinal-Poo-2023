@@ -38,6 +38,9 @@ public class Ellipse implements Figure {
         this.sMayorAxis = newMayorAxis;
         this.sMinorAxis = newMinorAxis;
     }
+    public void setCenterPoint(Point centerPoint){
+        this.centerPoint = centerPoint;
+    }
 
     @Override
     public boolean equals(Object obj) {

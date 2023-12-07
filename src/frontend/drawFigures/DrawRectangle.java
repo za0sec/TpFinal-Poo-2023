@@ -101,6 +101,16 @@ public class DrawRectangle extends DrawFigure {
     }
 
     @Override
+    public void mirrorH() {
+        super.mirrorRectangles(rectangle, true);
+    }
+
+    @Override
+    public void mirrorV() {
+        super.mirrorRectangles(rectangle, false);
+    }
+
+    @Override
     public void setBeveled(boolean value) {
         super.setBeveled(value);
         rectangleBeveled(rectangle);

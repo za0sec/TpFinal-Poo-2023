@@ -144,6 +144,29 @@ public abstract class DrawFigure implements Figure {
         rectangle.setTopLeft(new Point(centerPoint.getX() - (((rectangle.getBottomRight().getX() - rectangle.getTopLeft().getX()) * percentage)/2), centerPoint.getY() - (((rectangle.getBottomRight().getY() - rectangle.getTopLeft().getY()) * percentage)/2)));
         rectangle.setBottomRight(new Point(centerPoint.getX() + (((rectangle.getBottomRight().getX() - rectangle.getTopLeft().getX()) * percentage)/2), centerPoint.getY() + (((rectangle.getBottomRight().getY() - rectangle.getTopLeft().getY()) * percentage)/2)));
     }
+
+    protected void mirrorOvals(Ellipse ellipse, boolean flag){ //mirrorH if flag == true
+        if(flag){
+            Point newCenterPoint = new Point(ellipse.getCenterPoint().getX() + (ellipse.getsMayorAxis()), ellipse.getCenterPoint().getY());
+            ellipse.setCenterPoint(newCenterPoint);
+        } else {
+            Point newCenterPoint1 = new Point(ellipse.getCenterPoint().getX(), ellipse.getCenterPoint().getY() + ellipse.getsMinorAxis());
+            ellipse.setCenterPoint(newCenterPoint1);
+        }
+    }
+    protected  void mirrorRectangles(Rectangle rectangle, boolean flag){ //mirrorH if flag == true
+        if(flag){
+            double lengthRectangle = rectangle.getBottomRight().getX() - rectangle.getTopLeft().getX();
+            rectangle.setTopLeft(new Point(rectangle.getBottomRight().getX() , rectangle.getTopLeft().getY()));
+            rectangle.setBottomRight(new Point(rectangle.getBottomRight().getX() + lengthRectangle , rectangle.getBottomRight().getY()));
+        } else {
+            double heightRectangle = rectangle.getBottomRight().getY() - rectangle.getTopLeft().getY();
+            rectangle.setTopLeft(new Point(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY() + heightRectangle));
+            rectangle.setBottomRight(new Point(rectangle.getBottomRight().getX(), rectangle.getBottomRight().getY() + heightRectangle));
+        }
+    }
     public abstract void enlarge();
     public abstract void reduce();
+    public abstract void mirrorH();
+    public abstract void mirrorV();
 }

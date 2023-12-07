@@ -96,6 +96,20 @@ public class DrawSquare extends DrawFigure{
     }
 
     @Override
+    public void mirrorH() {
+        Rectangle rectangle = new Rectangle(square.getTopLeft(), square.getBottomRight());
+        mirrorRectangles(rectangle, true);
+        this.square = new Square(rectangle.getTopLeft(), rectangle.getBottomRight().getX() - rectangle.getTopLeft().getX());
+    }
+
+    @Override
+    public void mirrorV() {
+        Rectangle rectangle = new Rectangle(square.getTopLeft(), square.getBottomRight());
+        mirrorRectangles(rectangle, false);
+        this.square = new Square(rectangle.getTopLeft(), rectangle.getBottomRight().getX() - rectangle.getTopLeft().getX());
+    }
+
+    @Override
     public boolean equals(Object obj) {
         return this == obj || (obj instanceof DrawSquare that && that.square.equals(square));
     }

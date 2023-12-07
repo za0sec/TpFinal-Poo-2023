@@ -38,6 +38,8 @@ public class PaintPane extends BorderPane {
 	ToggleButton gatherButton = new ToggleButton("Agrupar");
 	ToggleButton unGatherButton = new ToggleButton("Desagrupar");
 	ToggleButton rotateButton = new ToggleButton("Girar D");
+	ToggleButton mirrorHButton = new ToggleButton("Voltear H");
+	ToggleButton mirrorVButton = new ToggleButton("Voltear V");
 	ToggleButton enlargeButton = new ToggleButton("Escalar +");
 	ToggleButton reduceButton = new ToggleButton("Escalar -");
 
@@ -73,7 +75,7 @@ public class PaintPane extends BorderPane {
 	public PaintPane(CanvasState<DrawFigure> canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
-		ToggleButton[] toolsArr = {multiSelection, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton, gatherButton, unGatherButton, rotateButton, enlargeButton, reduceButton};
+		ToggleButton[] toolsArr = {multiSelection, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton, gatherButton, unGatherButton, rotateButton, mirrorHButton, mirrorVButton, enlargeButton, reduceButton};
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
@@ -283,6 +285,31 @@ public class PaintPane extends BorderPane {
 				toShow.append(selectedFigures);
 				for(DrawFigure fig : selectedFigures){
 					fig.reduce();
+					redrawCanvas(selectedFigures);
+				}
+				statusPane.updateStatus(toShow.toString());
+			}
+		});
+		mirrorHButton.setOnAction(event -> {
+			if(!selectedFigures.isEmpty()){
+				StringBuilder toShow = new StringBuilder("Se volteó horizonalmente: ");
+				selectedFigures = canvasState.getFigures(selectedFigures);
+				toShow.append(selectedFigures);
+				for(DrawFigure fig : selectedFigures){
+					fig.mirrorH();
+					redrawCanvas(selectedFigures);
+				}
+				statusPane.updateStatus(toShow.toString());
+			}
+		});
+
+		mirrorVButton.setOnAction(event -> {
+			if(!selectedFigures.isEmpty()){
+				StringBuilder toShow = new StringBuilder("Se volteó verticalmente: ");
+				selectedFigures = canvasState.getFigures(selectedFigures);
+				toShow.append(selectedFigures);
+				for(DrawFigure fig : selectedFigures){
+					fig.mirrorV();
 					redrawCanvas(selectedFigures);
 				}
 				statusPane.updateStatus(toShow.toString());
