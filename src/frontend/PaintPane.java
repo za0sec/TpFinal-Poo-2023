@@ -18,6 +18,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.paint.Color;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class PaintPane extends BorderPane {
 
@@ -30,30 +31,29 @@ public class PaintPane extends BorderPane {
 	Color lineColor = Color.BLACK;
 	Color defaultFillColor = Color.YELLOW;
 
-	// Botones Barra Izquierda
-	ToggleButton multiSelection = new ToggleButton("Seleccionar");
-	ToggleButton rectangleButton = new ToggleButton("Rectangulo");
-	ToggleButton circleButton = new ToggleButton("Circulo");
-	ToggleButton squareButton = new ToggleButton("Cuadrado");
-	ToggleButton ellipseButton = new ToggleButton("Elipse");
-	ToggleButton deleteButton = new ToggleButton("Borrar");
-	ToggleButton gatherButton = new ToggleButton("Agrupar");
-	ToggleButton unGatherButton = new ToggleButton("Desagrupar");
-	ToggleButton rotateButton = new ToggleButton("Girar D");
-	ToggleButton mirrorHButton = new ToggleButton("Voltear H");
-	ToggleButton mirrorVButton = new ToggleButton("Voltear V");
-	ToggleButton enlargeButton = new ToggleButton("Escalar +");
-	ToggleButton reduceButton = new ToggleButton("Escalar -");
-
-	CheckBox shadowBox = new CheckBox("Sombra");
-	CheckBox gradientBox = new CheckBox("Gradiente");
-	CheckBox beveledBox = new CheckBox("Biselado");
-
 	// Selector de color de relleno
 	ColorPicker fillColorPicker = new ColorPicker(defaultFillColor);
 
 	// Dibujar una figura
 	Point startPoint;
+
+	ToggleButton multiSelection;
+	ToggleButton rectangleButton;
+	ToggleButton circleButton;
+	ToggleButton squareButton;
+	ToggleButton ellipseButton;
+	ToggleButton deleteButton;
+	ToggleButton gatherButton;
+	ToggleButton unGatherButton;
+	ToggleButton rotateButton;
+	ToggleButton mirrorHButton;
+	ToggleButton mirrorVButton;
+	ToggleButton enlargeButton;
+	ToggleButton reduceButton;
+	CheckBox shadowBox;
+	CheckBox gradientBox;
+	CheckBox beveledBox;
+
 
 	// Seleccionar una figura
 	Set<DrawFigure> selectedFigures = new HashSet<>();
@@ -75,21 +75,40 @@ public class PaintPane extends BorderPane {
 	Map<DrawFigure, Color> figureColorMap = new HashMap<>();
 
 	public PaintPane(CanvasState<DrawFigure> canvasState, StatusPane statusPane) {
+
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
-		ToggleButton[] toolsArr = {multiSelection, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton, gatherButton, unGatherButton, rotateButton, mirrorHButton, mirrorVButton, enlargeButton, reduceButton};
+
+		ButtonManager buttonsManager = new ButtonManager(canvasState, this::redrawCanvas, statusPane, selectedFigures, fillColorPicker);
+
+		multiSelection = buttonsManager.getMultiSelection();
+		rectangleButton = buttonsManager.getRectangleButton();
+		circleButton = buttonsManager.getCircleButton();
+		squareButton = buttonsManager.getSquareButton();
+		ellipseButton = buttonsManager.getEllipseButton();
+		deleteButton = buttonsManager.getDeleteButton();
+		gatherButton = buttonsManager.getGatherButton();
+		unGatherButton = buttonsManager.getUnGatherButton();
+		rotateButton = buttonsManager.getRotateButton();
+		mirrorHButton = buttonsManager.getMirrorHButton();
+		mirrorVButton = buttonsManager.getMirrorVButton();
+		enlargeButton = buttonsManager.getEnlargeButton();
+		reduceButton = buttonsManager.getReduceButton();
+
+		shadowBox = buttonsManager.getShadowBox();
+		gradientBox = buttonsManager.getGradientBox();
+		beveledBox = buttonsManager.getBeveledBox();
+
+
+		ToggleButton[] toolsArr = new ToggleButton[]{multiSelection, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton, gatherButton, unGatherButton, rotateButton, mirrorHButton, mirrorVButton, enlargeButton, reduceButton};
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
 			tool.setToggleGroup(tools);
 			tool.setCursor(Cursor.HAND);
 		}
-		rectangleButton.setUserData(new DrawRectangleButton());
-		circleButton.setUserData(new DrawCircleButton());
-		squareButton.setUserData(new DrawSquareButton());
-		ellipseButton.setUserData(new DrawEllipseButton());
-		multiSelection.setUserData(new DrawMultiSelectionButton());
 
+		buttonsSetData();
 
 		// Crear HBox para CheckBoxes
 		HBox checkBoxHBox = new HBox(10, new Label("Efectos: "), shadowBox, gradientBox, beveledBox);
@@ -101,10 +120,11 @@ public class PaintPane extends BorderPane {
 		// Crear VBox para botones
 		VBox buttonsBox = new VBox(10);
 		buttonsBox.getChildren().addAll(toolsArr);
-		buttonsBox.getChildren().add(fillColorPicker);
+		buttonsBox.getChildren().add(this.fillColorPicker);
 		buttonsBox.setPadding(new Insets(5));
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
+
 
 		canvas.setOnMousePressed(event -> {
 			startPoint = new Point(event.getX(), event.getY());
@@ -130,15 +150,15 @@ public class PaintPane extends BorderPane {
 			}
 			DrawFigure newFigure = null;
 			Toggle selectedToggle = tools.getSelectedToggle();
-				Buttons buttons = (Buttons) selectedToggle.getUserData();
-				if (!multiSelection.isSelected() && buttons.isDrawable() && !isSelected) {
-					newFigure = buttons.execute(startPoint, endPoint, gc, fillColorPicker.getValue(), Color.BLACK);
-					newFigure.setStatus(shadowBox.isSelected(), gradientBox.isSelected(), beveledBox.isSelected());
-					newFigure.draw();
-					figureColorMap.put(newFigure, fillColorPicker.getValue());
-					canvasState.addFigure(newFigure);
-					startPoint = null;
-				}
+			Buttons buttons = (Buttons) selectedToggle.getUserData();
+			if (!multiSelection.isSelected() && buttons.isDrawable() && !isSelected) {
+				newFigure = buttons.execute(startPoint, endPoint, gc, fillColorPicker.getValue(), Color.BLACK);
+				newFigure.setStatus(shadowBox.isSelected(), gradientBox.isSelected(), beveledBox.isSelected());
+				newFigure.draw();
+				figureColorMap.put(newFigure, fillColorPicker.getValue());
+				canvasState.addFigure(newFigure);
+				startPoint = null;
+			}
 		});
 
 		canvas.setOnMouseMoved(event -> {
@@ -204,67 +224,6 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
-		gatherButton.setOnAction(event -> {
-			if (!selectedFigures.isEmpty()) {
-				StringBuilder toShow = new StringBuilder("Se agruparon: ");
-				selectedFigures = canvasState.getFigures(selectedFigures);
-				toShow.append(selectedFigures);
-				canvasState.gather(selectedFigures);
-				redrawCanvas(selectedFigures);
-				statusPane.updateStatus(toShow.toString());
-				pressSelected();
-			}
-		});
-		unGatherButton.setOnAction(event -> {
-			if (!selectedFigures.isEmpty()) {
-				StringBuilder toShow = new StringBuilder("Se desagruparon: ");
-				selectedFigures = canvasState.getFigures(selectedFigures);
-				toShow.append(selectedFigures);
-				canvasState.unGather(selectedFigures);
-				redrawCanvas(selectedFigures);
-				isSelected = false;
-				statusPane.updateStatus(toShow.toString());
-				selectedFigures.clear();
-				pressSelected();
-			}
-		});
-		rotateButton.setOnAction(event -> {
-			StringBuilder toShow = new StringBuilder("Se rotó: ");
-			applyAction(DrawFigure::rotate, toShow);
-		});
-		enlargeButton.setOnAction(event -> {
-			StringBuilder toShow = new StringBuilder("Se agrandó un 25%: ");
-			applyAction(DrawFigure::enlarge, toShow);
-		});
-		reduceButton.setOnAction(event -> {
-			StringBuilder toShow = new StringBuilder("Se achicó un 25%: ");
-			applyAction(DrawFigure::reduce, toShow);
-		});
-		mirrorHButton.setOnAction(event -> {
-			StringBuilder toShow = new StringBuilder("Se volteó horizontalmente: ");
-			applyAction(DrawFigure::mirrorH, toShow);
-		});
-		mirrorVButton.setOnAction(event -> {
-			StringBuilder toShow = new StringBuilder("Se volteó verticalmente: ");
-			applyAction(DrawFigure::mirrorV, toShow);
-		});
-		shadowBox.setOnAction(event -> {
-			StringBuilder toShow = new StringBuilder("Se aplico sombra a: ");
-			applyAction(figure -> figure.setShadow(shadowBox.isSelected()), toShow);
-		});
-		gradientBox.setOnAction(event -> {
-			StringBuilder toShow = new StringBuilder("Se aplico gradiente a: ");
-			applyAction(figure -> figure.setGradient(gradientBox.isSelected(), fillColorPicker.getValue()), toShow);
-		});
-		beveledBox.setOnAction(event -> {
-			StringBuilder toShow = new StringBuilder("Se aplico biselado a: ");
-			applyAction(figure -> figure.setBeveled(beveledBox.isSelected()), toShow);
-		});
-		deleteButton.setOnAction(event -> {
-			StringBuilder toShow = new StringBuilder("Se elimino: ");
-			applyAction(canvasState::deleteFigure, toShow);
-		});
-
 
 		fillColorPicker.valueProperty().addListener(new ChangeListener<Color>() {
 			@Override
@@ -286,26 +245,6 @@ public class PaintPane extends BorderPane {
 		setRight(canvas);
 	}
 
-	private void applyAction(FigureAction action, StringBuilder toShow) {
-		if (!selectedFigures.isEmpty()) {
-			for (DrawFigure figure : canvasState.getFigures(selectedFigures)) {
-				toShow.append(figure.toString()).append(", ");
-				action.apply(figure);
-				redrawCanvas(figure);
-			}
-		}
-		statusPane.updateStatus(toShow.toString());
-		pressSelected();
-	}
-
-	private void pressSelected(){
-		multiSelection.requestFocus();
-		multiSelection.fire();
-	}
-
-	void redrawCanvas(DrawFigure figure){
-		redrawCanvas(Set.of(figure));
-	}
 
 	void redrawCanvas(Set<DrawFigure> figures){
 		Set<DrawFigure> preDraw = canvasState.figuresSet();
@@ -333,4 +272,17 @@ public class PaintPane extends BorderPane {
 			previewFigure.draw();
 		}
 	}
+
+	void redrawCanvas(DrawFigure figure){
+		redrawCanvas(Set.of(figure));
+	}
+
+	private void buttonsSetData(){
+		rectangleButton.setUserData(new DrawRectangleButton());
+		circleButton.setUserData(new DrawCircleButton());
+		squareButton.setUserData(new DrawSquareButton());
+		ellipseButton.setUserData(new DrawEllipseButton());
+		multiSelection.setUserData(new DrawMultiSelectionButton());
+	}
+
 }
