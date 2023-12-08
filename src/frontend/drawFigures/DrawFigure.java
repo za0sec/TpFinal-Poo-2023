@@ -18,6 +18,10 @@ public abstract class DrawFigure implements Figure {
 
     public DrawFigure(GraphicsContext gc, Color fill, Color stroke){
         this.gc = gc;
+        setFill(fill);
+    }
+
+    public void setFill(Color fill){
         this.fill = fill;
     }
 

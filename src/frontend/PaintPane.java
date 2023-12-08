@@ -4,6 +4,7 @@ import backend.CanvasState;
 import backend.model.*;
 import frontend.buttons.drawButtons.*;
 import frontend.drawFigures.*;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -13,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.paint.Color;
 
 import java.util.*;
@@ -139,16 +141,6 @@ public class PaintPane extends BorderPane {
 				}
 		});
 
-		multiSelection.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue) {
-				previousColor = fillColorPicker.getValue();
-				fillColorPicker.setValue(Color.TRANSPARENT);
-
-			} else {
-				fillColorPicker.setValue(previousColor);
-			}
-		});
-
 		canvas.setOnMouseMoved(event -> {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;
@@ -212,20 +204,6 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
-		deleteButton.setOnAction(event -> {
-			if (!selectedFigures.isEmpty()) {
-				selectedFigures = canvasState.getFigures(selectedFigures);
-				for (DrawFigure figure : selectedFigures) {
-					canvasState.deleteFigure(figure);
-					redrawCanvas(figure);
-					figure = null;
-				}
-				pressSelected();
-			}
-
-		});
-
-
 		gatherButton.setOnAction(event -> {
 			if (!selectedFigures.isEmpty()) {
 				StringBuilder toShow = new StringBuilder("Se agruparon: ");
@@ -237,7 +215,6 @@ public class PaintPane extends BorderPane {
 				pressSelected();
 			}
 		});
-
 		unGatherButton.setOnAction(event -> {
 			if (!selectedFigures.isEmpty()) {
 				StringBuilder toShow = new StringBuilder("Se desagruparon: ");
@@ -251,95 +228,54 @@ public class PaintPane extends BorderPane {
 				pressSelected();
 			}
 		});
-
 		rotateButton.setOnAction(event -> {
-			if(!selectedFigures.isEmpty()){
-				StringBuilder toShow = new StringBuilder("Se rotó: ");
-				selectedFigures = canvasState.getFigures(selectedFigures);
-				toShow.append(selectedFigures);
-				for(DrawFigure fig : selectedFigures){
-					fig.rotate();
-					redrawCanvas(selectedFigures);
-				}
-				statusPane.updateStatus(toShow.toString());
-			}
+			StringBuilder toShow = new StringBuilder("Se rotó: ");
+			applyAction(DrawFigure::rotate, toShow);
 		});
-
 		enlargeButton.setOnAction(event -> {
-			if(!selectedFigures.isEmpty()){
-				StringBuilder toShow = new StringBuilder("Se agrandó un 25%: ");
-				selectedFigures = canvasState.getFigures(selectedFigures);
-				toShow.append(selectedFigures);
-				for(DrawFigure fig : selectedFigures){
-					fig.enlarge();
-					redrawCanvas(selectedFigures);
-				}
-				statusPane.updateStatus(toShow.toString());
-			}
+			StringBuilder toShow = new StringBuilder("Se agrandó un 25%: ");
+			applyAction(DrawFigure::enlarge, toShow);
 		});
-
 		reduceButton.setOnAction(event -> {
-			if(!selectedFigures.isEmpty()){
-				StringBuilder toShow = new StringBuilder("Se achicó un 25%: ");
-				selectedFigures = canvasState.getFigures(selectedFigures);
-				toShow.append(selectedFigures);
-				for(DrawFigure fig : selectedFigures){
-					fig.reduce();
-					redrawCanvas(selectedFigures);
-				}
-				statusPane.updateStatus(toShow.toString());
-			}
+			StringBuilder toShow = new StringBuilder("Se achicó un 25%: ");
+			applyAction(DrawFigure::reduce, toShow);
 		});
 		mirrorHButton.setOnAction(event -> {
-			if(!selectedFigures.isEmpty()){
-				StringBuilder toShow = new StringBuilder("Se volteó horizonalmente: ");
-				selectedFigures = canvasState.getFigures(selectedFigures);
-				toShow.append(selectedFigures);
-				for(DrawFigure fig : selectedFigures){
-					fig.mirrorH();
-					redrawCanvas(selectedFigures);
-				}
-				statusPane.updateStatus(toShow.toString());
-			}
+			StringBuilder toShow = new StringBuilder("Se volteó horizontalmente: ");
+			applyAction(DrawFigure::mirrorH, toShow);
 		});
-
 		mirrorVButton.setOnAction(event -> {
-			if(!selectedFigures.isEmpty()){
-				StringBuilder toShow = new StringBuilder("Se volteó verticalmente: ");
-				selectedFigures = canvasState.getFigures(selectedFigures);
-				toShow.append(selectedFigures);
-				for(DrawFigure fig : selectedFigures){
-					fig.mirrorV();
-					redrawCanvas(selectedFigures);
-				}
-				statusPane.updateStatus(toShow.toString());
-			}
+			StringBuilder toShow = new StringBuilder("Se volteó verticalmente: ");
+			applyAction(DrawFigure::mirrorV, toShow);
 		});
-
 		shadowBox.setOnAction(event -> {
-			if (!selectedFigures.isEmpty()){
-				for (DrawFigure figure : canvasState.getFigures(selectedFigures)){
-					figure.setShadow(shadowBox.isSelected());
-					redrawCanvas(figure);
-					pressSelected();
-				}
-			}
+			StringBuilder toShow = new StringBuilder("Se aplico sombra a: ");
+			applyAction(figure -> figure.setShadow(shadowBox.isSelected()), toShow);
 		});
 		gradientBox.setOnAction(event -> {
-			if (!selectedFigures.isEmpty()){
-				for (DrawFigure figure : canvasState.getFigures(selectedFigures)){
-					figure.setGradient(gradientBox.isSelected(), fillColorPicker.getValue());
-					redrawCanvas(figure);
-					pressSelected();
-				}
-			}
+			StringBuilder toShow = new StringBuilder("Se aplico gradiente a: ");
+			applyAction(figure -> figure.setGradient(gradientBox.isSelected(), fillColorPicker.getValue()), toShow);
 		});
 		beveledBox.setOnAction(event -> {
-			if (!selectedFigures.isEmpty()){
-				for (DrawFigure figure : canvasState.getFigures(selectedFigures)){
-					figure.setBeveled(beveledBox.isSelected());
-					redrawCanvas(figure);
-					pressSelected();
+			StringBuilder toShow = new StringBuilder("Se aplico biselado a: ");
+			applyAction(figure -> figure.setBeveled(beveledBox.isSelected()), toShow);
+		});
+		deleteButton.setOnAction(event -> {
+			StringBuilder toShow = new StringBuilder("Se elimino: ");
+			applyAction(canvasState::deleteFigure, toShow);
+		});
+
+
+		fillColorPicker.valueProperty().addListener(new ChangeListener<Color>() {
+			@Override
+			public void changed(ObservableValue<? extends Color> observableValue, Color oldColor, Color newColor) {
+				previousColor = oldColor;
+				if (!selectedFigures.isEmpty()) {
+					for (DrawFigure figure : selectedFigures) {
+						figureColorMap.put(figure, newColor);
+						figure.setFill(newColor);
+					}
+					redrawCanvas(selectedFigures);
 				}
 			}
 		});
@@ -348,6 +284,18 @@ public class PaintPane extends BorderPane {
 		setTop(checkBoxHBox);
 		setLeft(buttonsBox);
 		setRight(canvas);
+	}
+
+	private void applyAction(FigureAction action, StringBuilder toShow) {
+		if (!selectedFigures.isEmpty()) {
+			for (DrawFigure figure : canvasState.getFigures(selectedFigures)) {
+				toShow.append(figure.toString()).append(", ");
+				action.apply(figure);
+				redrawCanvas(figure);
+			}
+		}
+		statusPane.updateStatus(toShow.toString());
+		pressSelected();
 	}
 
 	private void pressSelected(){
