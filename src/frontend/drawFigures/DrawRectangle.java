@@ -19,8 +19,8 @@ public class DrawRectangle extends DrawFigure {
     }
 
     @Override
-    public void draw() {
-        super.draw();
+    public void draw(boolean isSelected) {
+        super.draw(isSelected);
         gc.fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
                 Math.abs(rectangle.getTopLeft().getX() - rectangle.getBottomRight().getX()), Math.abs(rectangle.getTopLeft().getY() - rectangle.getBottomRight().getY()));
         gc.strokeRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),

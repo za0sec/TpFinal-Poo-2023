@@ -18,8 +18,8 @@ public class DrawSquare extends DrawFigure{
     }
 
     @Override
-    public void draw() {
-        super.draw();
+    public void draw(boolean isSelected) {
+        super.draw(isSelected);
         gc.fillRect(square.getTopLeft().getX(), square.getTopLeft().getY(),
                 Math.abs(square.getTopLeft().getX() - square.getBottomRight().getX()), Math.abs(square.getTopLeft().getY() - square.getBottomRight().getY()));
         gc.strokeRect(square.getTopLeft().getX(), square.getTopLeft().getY(),
@@ -114,5 +114,11 @@ public class DrawSquare extends DrawFigure{
         return this == obj || (obj instanceof DrawSquare that && that.square.equals(square));
     }
 
+    @Override
+    public void setBeveled(boolean value) {
+        super.setBeveled(value);
+        rectangleBeveled(new Rectangle(square.getTopLeft(), square.getBottomRight()));
+
+    }
 
 }

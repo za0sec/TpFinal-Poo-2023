@@ -22,8 +22,8 @@ public class DrawEllipse extends DrawFigure{
     }
 
     @Override
-    public void draw() {
-        super.draw();
+    public void draw(boolean isSelected) {
+        super.draw(isSelected);
         gc.strokeOval(ellipse.getCenterPoint().getX() - (ellipse.getsMayorAxis() / 2), ellipse.getCenterPoint().getY() - (ellipse.getsMinorAxis() / 2), ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
         gc.fillOval(ellipse.getCenterPoint().getX() - (ellipse.getsMayorAxis() / 2), ellipse.getCenterPoint().getY() - (ellipse.getsMinorAxis() / 2), ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
     }

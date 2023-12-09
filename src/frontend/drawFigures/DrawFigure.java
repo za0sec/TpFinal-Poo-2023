@@ -25,13 +25,15 @@ public abstract class DrawFigure implements Figure {
         this.fill = fill;
     }
 
-    public void draw(){
+    public void draw(boolean isSelected){
         setShadow(isShadow);
+        setBeveled(isBeveled);
         gc.setLineDashes(null);
         gc.setFill(fill);
-        setBeveled(isBeveled);
         gc.setLineWidth(1);
         setGradient(isGradient, fill);
+        if (isSelected)
+            gc.setStroke(Color.RED);
     };
 
     public abstract Figure getFigure();
@@ -110,9 +112,11 @@ public abstract class DrawFigure implements Figure {
             gc.setStroke(Color.LIGHTGRAY);
             gc.strokeLine(x, y, x + width, y);
             gc.strokeLine(x, y, x, y + height);
+            //El problema es que cada vez que llamo al redrawCanvas para un beveled, se va a quedar como ultimo color de la linea el color negro, y yo quiero que si se selecciona se ponga el color
             gc.setStroke(Color.BLACK);
             gc.strokeLine(x + width, y, x + width, y + height);
             gc.strokeLine(x, y + height, x + width, y + height);
+
         }
     }
 

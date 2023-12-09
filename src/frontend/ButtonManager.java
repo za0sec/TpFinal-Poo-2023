@@ -3,8 +3,6 @@ package frontend;
 import backend.CanvasState;
 import frontend.buttons.drawButtons.*;
 import frontend.drawFigures.DrawFigure;
-import frontend.drawFigures.FigureAction;
-import frontend.drawFigures.GroupAction;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -48,17 +46,52 @@ public class ButtonManager {
 
     ColorPicker fillColorPicker;
 
+    CheckBox[] boxArr;
+
     public ButtonManager(CanvasState<DrawFigure> canvasState, Redraw redrawHandler, StatusPane statusPane, Set<DrawFigure> selectedFigures, ColorPicker fillColorPicker) {
         this.canvasState = canvasState;
         this.redrawHandler = redrawHandler;
         this.statusPane = statusPane;
         this.selectedFigures = selectedFigures;
         this.fillColorPicker = fillColorPicker;
+        this.toolsArr = new ToggleButton[]{multiSelection, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton, gatherButton, unGatherButton, rotateButton, mirrorHButton, mirrorVButton, enlargeButton, reduceButton};
+        this.boxArr = new CheckBox[]{shadowBox, gradientBox, beveledBox};
+
+        // Crear HBox para CheckBoxes
+        this.checkBoxHBox = new HBox(10, new Label("Efectos: "), shadowBox, gradientBox, beveledBox);
+        checkBoxHBox.setPadding(new Insets(5));
+        checkBoxHBox.setStyle("-fx-background-color: #999");
+        checkBoxHBox.setAlignment(Pos.CENTER);
+
+        // Crear VBox para botones
+        this.buttonsBox = new VBox(10);
+        buttonsBox.getChildren().addAll(toolsArr);
+        buttonsBox.getChildren().add(this.fillColorPicker);
+        buttonsBox.setPadding(new Insets(5));
+        buttonsBox.setStyle("-fx-background-color: #999");
+        buttonsBox.setPrefWidth(100);
+
+
+
+        buttonsSetData();
 
         configureButtons();
     }
 
+    public HBox getCheckBoxHBox(){
+        return checkBoxHBox;
+    }
+    public VBox getButtonsBox(){
+        return buttonsBox;
+    }
 
+    public ToggleButton[] getToolsArr(){
+        return toolsArr;
+    }
+
+    public CheckBox[] getBoxArr(){
+        return boxArr;
+    }
 
     private void configureButtons(){
         gatherButton.setOnAction(event -> {
@@ -97,6 +130,7 @@ public class ButtonManager {
         gradientBox.setOnAction(event -> {
             StringBuilder toShow = new StringBuilder("Se aplico gradiente a: ");
             applyAction(figure -> figure.setGradient(gradientBox.isSelected(), fillColorPicker.getValue()), toShow);
+
         });
         beveledBox.setOnAction(event -> {
             StringBuilder toShow = new StringBuilder("Se aplico biselado a: ");
@@ -110,6 +144,7 @@ public class ButtonManager {
     }
 
 
+    //Buttons
     public ToggleButton getRectangleButton(){
         return rectangleButton;
     }
@@ -150,6 +185,7 @@ public class ButtonManager {
         return multiSelection;
     }
 
+    //CheckBoxes
     public CheckBox getShadowBox(){
         return shadowBox;
     }
@@ -161,17 +197,15 @@ public class ButtonManager {
     }
 
 
-
-
     private void groupApply(GroupAction action, StringBuilder toShow){
         if (!selectedFigures.isEmpty()) {
             Set<DrawFigure> figures = canvasState.getFigures(selectedFigures);
             action.apply(figures);
             redrawHandler.redraw(figures);
             toShow.append(figures);
-            statusPane.updateStatus(toShow.toString());
-            pressSelected();
         }
+        statusPane.updateStatus(toShow.toString());
+        pressSelected();
     }
 
     private void applyAction(FigureAction action, StringBuilder toShow) {

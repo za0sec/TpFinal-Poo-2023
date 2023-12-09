@@ -1,4 +1,6 @@
-package frontend.drawFigures;
+package frontend;
+
+import frontend.drawFigures.DrawFigure;
 
 import java.util.Set;
 

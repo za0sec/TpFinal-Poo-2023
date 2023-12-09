@@ -10,7 +10,7 @@ public class DrawSelectionRectangle extends DrawRectangle{
 
     }
     @Override
-    public void draw(){
+    public void draw(boolean isSelected){
         gc.setLineDashes(15d, 10d);
         gc.setFill(fill);
         gc.fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
