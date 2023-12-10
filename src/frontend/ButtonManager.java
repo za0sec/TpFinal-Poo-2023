@@ -157,7 +157,8 @@ public class ButtonManager {
     public ToggleButton getEllipseButton(){
         return ellipseButton;
     }
-    public ToggleButton getDeleteButton(){
+
+    /*public ToggleButton getDeleteButton(){
         return deleteButton;
     }
     public ToggleButton getGatherButton(){
@@ -180,7 +181,8 @@ public class ButtonManager {
     }
     public ToggleButton getMirrorVButton(){
         return mirrorVButton;
-    }
+    }*/
+
     public ToggleButton getMultiSelection(){
         return multiSelection;
     }

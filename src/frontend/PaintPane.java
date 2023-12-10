@@ -5,8 +5,6 @@ import backend.model.*;
 import frontend.buttons.drawButtons.*;
 import frontend.drawFigures.*;
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,49 +16,45 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.paint.Color;
 
 import java.util.*;
-import java.util.function.Function;
 
 public class PaintPane extends BorderPane {
 
 	// BackEnd
-	CanvasState<DrawFigure> canvasState;
+	private final CanvasState<DrawFigure> canvasState;
 
 	// Canvas y relacionados
-	Canvas canvas = new Canvas(800, 600);
-	GraphicsContext gc = canvas.getGraphicsContext2D();
-	Color lineColor = Color.BLACK;
-	Color defaultFillColor = Color.YELLOW;
+	private final Canvas canvas = new Canvas(800, 600);
+	private final GraphicsContext gc = canvas.getGraphicsContext2D();
+	private final Color lineColor = Color.BLACK;
+	private final Color defaultFillColor = Color.YELLOW;
 
 	// Selector de color de relleno
-	ColorPicker fillColorPicker = new ColorPicker(defaultFillColor);
+	private final ColorPicker fillColorPicker = new ColorPicker(defaultFillColor);
 
 	// Dibujar una figura
-	Point startPoint;
+	private Point startPoint;
 
-	ToggleButton multiSelection;
-	CheckBox shadowBox;
-	CheckBox gradientBox;
-	CheckBox beveledBox;
-
+	private final ToggleButton multiSelection;
+	private final CheckBox shadowBox, gradientBox, beveledBox;
 
 	// Seleccionar una figura
-	Set<DrawFigure> selectedFigures = new HashSet<>();
+	private final Set<DrawFigure> selectedFigures = new HashSet<>();
 
-	ArrayList<Boolean> status = new ArrayList<>();
+	private ArrayList<Boolean> status = new ArrayList<>();
 
 	//Figura temporal
 	private DrawFigure previewFigure;
 
-	private Color previousColor = defaultFillColor;
+	private final Color previousColor = defaultFillColor;
 
 	//Status de si hay seleccion de una figura
 	private boolean isSelected = false;
 
 	// StatusBar
-	StatusPane statusPane;
+	private StatusPane statusPane;
 
 	// Colores de relleno de cada figura
-	Map<DrawFigure, Color> figureColorMap = new HashMap<>();
+	private final Map<DrawFigure, Color> figureColorMap = new HashMap<>();
 
 	public PaintPane(CanvasState<DrawFigure> canvasState, StatusPane statusPane) {
 
@@ -91,13 +85,17 @@ public class PaintPane extends BorderPane {
 			startPoint = new Point(event.getX(), event.getY());
 			previewFigure = null;
 			Toggle selectedToggle = tools.getSelectedToggle();
-			if (selectedToggle != null) {
+			try{
 				Buttons buttons = (Buttons) selectedToggle.getUserData();
-				if (buttons != null) {
+				try{
 					previewFigure = buttons.execute(startPoint, startPoint, gc, fillColorPicker.getValue(), Color.BLACK);
 					previewFigure.setStatus(shadowBox.isSelected(), gradientBox.isSelected(), beveledBox.isSelected());
 					previewFigure.draw(false);
+				}catch(Exception ex){
+					System.out.println("No hay ninguna figura seleccionada");
 				}
+			}catch(Exception ex){
+				System.out.println("No hay ningun boton seleccionado");
 			}
 		});
 
@@ -111,15 +109,20 @@ public class PaintPane extends BorderPane {
 			}
 			DrawFigure newFigure = null;
 			Toggle selectedToggle = tools.getSelectedToggle();
-			Buttons buttons = (Buttons) selectedToggle.getUserData();
-			if (!multiSelection.isSelected() && buttons.isDrawable() && !isSelected) {
-				newFigure = buttons.execute(startPoint, endPoint, gc, fillColorPicker.getValue(), Color.BLACK);
-				newFigure.setStatus(shadowBox.isSelected(), gradientBox.isSelected(), beveledBox.isSelected());
-				newFigure.draw(false);
-				figureColorMap.put(newFigure, fillColorPicker.getValue());
-				canvasState.addFigure(newFigure);
-				startPoint = null;
+			try {
+				Buttons buttons = (Buttons) selectedToggle.getUserData();
+				if (!multiSelection.isSelected() && buttons.isDrawable() && !isSelected) {
+					newFigure = buttons.execute(startPoint, endPoint, gc, fillColorPicker.getValue(), Color.BLACK);
+					newFigure.setStatus(shadowBox.isSelected(), gradientBox.isSelected(), beveledBox.isSelected());
+					newFigure.draw(false);
+					figureColorMap.put(newFigure, fillColorPicker.getValue());
+					canvasState.addFigure(newFigure);
+					startPoint = null;
+				}
+			}catch (Exception ex) {
+				System.out.println("No hay ningun boton seleccionado");
 			}
+
 		});
 
 		canvas.setOnMouseMoved(event -> {
@@ -130,11 +133,10 @@ public class PaintPane extends BorderPane {
 				if (figure.belongs(eventPoint)) {
 					found = true;
 					label.append(figure.toString());
+					statusPane.updateStatus(label.toString());
 				}
 			}
-			if (found) {
-				statusPane.updateStatus(label.toString());
-			} else {
+			if (!found) {
 				statusPane.updateStatus(eventPoint.toString());
 			}
 
@@ -185,8 +187,8 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
-
-		fillColorPicker.valueProperty().addListener(new ChangeListener<Color>() {
+		//Codigo para cambiar de color cualquier figura, comentado porque la consigna del tp dice explicitamente que no se debe poder cambiar de color
+		/*fillColorPicker.valueProperty().addListener(new ChangeListener<Color>() {
 			@Override
 			public void changed(ObservableValue<? extends Color> observableValue, Color oldColor, Color newColor) {
 				previousColor = oldColor;
@@ -198,7 +200,7 @@ public class PaintPane extends BorderPane {
 					redrawCanvas(selectedFigures);
 				}
 			}
-		});
+		});*/
 
 
 		setTop(checkBoxHBox);
@@ -207,7 +209,7 @@ public class PaintPane extends BorderPane {
 	}
 
 
-	void redrawCanvas(Set<DrawFigure> figures){
+	private void redrawCanvas(Set<DrawFigure> figures){
 		Set<DrawFigure> preDraw = canvasState.figuresSet();
 		if (isSelected){
 			setCanvas(preDraw);
@@ -230,7 +232,7 @@ public class PaintPane extends BorderPane {
 		}
 	}
 
-	void redrawCanvas(DrawFigure figure){
+	private void redrawCanvas(DrawFigure figure){
 		redrawCanvas(Set.of(figure));
 	}
 	
