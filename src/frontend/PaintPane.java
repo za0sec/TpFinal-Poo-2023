@@ -45,7 +45,8 @@ public class PaintPane extends BorderPane {
 	//Figura temporal
 	private DrawFigure previewFigure;
 
-	private final Color previousColor = defaultFillColor;
+	//Variable que solo debe existir si se puede cambiar el color de la figura al seleccionarla
+	//private Color previousColor = defaultFillColor;
 
 	//Status de si hay seleccion de una figura
 	private boolean isSelected = false;

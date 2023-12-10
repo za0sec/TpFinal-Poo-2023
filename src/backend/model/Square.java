@@ -1,5 +1,7 @@
 package backend.model;
 
+import java.util.Objects;
+
 public class Square implements Figure {
 
     private final Point topLeft;
@@ -31,6 +33,11 @@ public class Square implements Figure {
     @Override
     public boolean equals(Object obj) {
         return this == obj || (obj instanceof Square that && that.topLeft.equals(topLeft) && that.bottomRight.equals(bottomRight));
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(topLeft, bottomRight);
     }
 
 }

@@ -83,6 +83,7 @@ public class DrawCircle extends DrawFigure{
         super.setGradient(value, fillColor);
     }
 
+    //Decidimos que en el cuadrado y el circulo no haga nada esta funcion ya que no es practico cuando a efectos visuales es lo mismo.
     @Override
     public void rotate() {
 

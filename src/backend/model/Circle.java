@@ -1,5 +1,7 @@
 package backend.model;
 
+import java.util.Objects;
+
 public class Circle extends Ellipse {
 
     public Circle(Point centerPoint, double radius) {
@@ -19,7 +21,5 @@ public class Circle extends Ellipse {
     public String toString() {
         return String.format("Círculo [Centro: %s, Radio: %.2f]", centerPoint, getRadius());
     }
-
-
 
 }

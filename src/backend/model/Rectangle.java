@@ -1,5 +1,7 @@
 package backend.model;
 
+import java.util.Objects;
+
 public class Rectangle implements Figure {
 
     private Point topLeft;
@@ -34,6 +36,11 @@ public class Rectangle implements Figure {
     @Override
     public boolean equals(Object obj) {
         return this == obj || (obj instanceof Rectangle that && that.topLeft.equals(topLeft) && that.bottomRight.equals(bottomRight));
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(topLeft, bottomRight);
     }
 
 }

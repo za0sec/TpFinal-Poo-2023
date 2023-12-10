@@ -25,11 +25,7 @@ public class CanvasState<E extends Figure> {
     }
 
     public Set<E> figuresSet() {
-        Set<E> toReturn = new HashSet<>();
-        for(E figure : list){
-            toReturn.add(figure);
-        }
-        return toReturn;
+        return new HashSet<>(list);
     }
 
     public Set<E> getFigures(E figure){

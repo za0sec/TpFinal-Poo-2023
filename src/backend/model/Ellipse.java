@@ -1,5 +1,7 @@
 package backend.model;
 
+import java.util.Objects;
+
 public class Ellipse implements Figure {
 
     protected Point centerPoint;
@@ -45,6 +47,11 @@ public class Ellipse implements Figure {
     @Override
     public boolean equals(Object obj) {
         return this == obj || (obj instanceof Ellipse that && that.centerPoint.equals(centerPoint) && that.sMinorAxis == sMinorAxis && that.sMayorAxis == sMayorAxis);
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(centerPoint, sMayorAxis, sMinorAxis);
     }
 
 }

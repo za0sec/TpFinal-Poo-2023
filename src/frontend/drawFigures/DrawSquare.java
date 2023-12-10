@@ -76,6 +76,7 @@ public class DrawSquare extends DrawFigure{
         setRectangleGradient(value, fillColor);
     }
 
+    //Decidimos que en el cuadrado y el circulo no haga nada esta funcion ya que no es practico cuando a efectos visuales es lo mismo.
     @Override
     public void rotate() {
 
