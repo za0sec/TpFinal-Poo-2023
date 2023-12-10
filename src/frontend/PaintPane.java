@@ -2,9 +2,9 @@ package frontend;
 
 import backend.CanvasState;
 import backend.model.*;
+import frontend.buttons.ButtonManager;
 import frontend.buttons.drawButtons.*;
 import frontend.drawFigures.*;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -12,7 +12,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.beans.value.ChangeListener;
 import javafx.scene.paint.Color;
 
 import java.util.*;

@@ -1,4 +1,4 @@
-package frontend;
+package frontend.buttons;
 
 import frontend.drawFigures.DrawFigure;
 

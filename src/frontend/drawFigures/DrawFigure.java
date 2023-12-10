@@ -18,10 +18,6 @@ public abstract class DrawFigure implements Figure {
 
     public DrawFigure(GraphicsContext gc, Color fill, Color stroke){
         this.gc = gc;
-        setFill(fill);
-    }
-
-    public void setFill(Color fill){
         this.fill = fill;
     }
 
@@ -112,7 +108,6 @@ public abstract class DrawFigure implements Figure {
             gc.setStroke(Color.LIGHTGRAY);
             gc.strokeLine(x, y, x + width, y);
             gc.strokeLine(x, y, x, y + height);
-            //El problema es que cada vez que llamo al redrawCanvas para un beveled, se va a quedar como ultimo color de la linea el color negro, y yo quiero que si se selecciona se ponga el color
             gc.setStroke(Color.BLACK);
             gc.strokeLine(x + width, y, x + width, y + height);
             gc.strokeLine(x, y + height, x + width, y + height);
@@ -143,7 +138,7 @@ public abstract class DrawFigure implements Figure {
     }
 
     public abstract void rotate();
-    public void resizeOvals(Ellipse ellipse, double percentage){
+    public void resizeOvals(Ellipse ellipse, double percentage) {
         ellipse.setAxis(ellipse.getsMayorAxis() * percentage, ellipse.getsMinorAxis() * percentage);
     }
 
@@ -153,7 +148,7 @@ public abstract class DrawFigure implements Figure {
         rectangle.setBottomRight(new Point(centerPoint.getX() + (((rectangle.getBottomRight().getX() - rectangle.getTopLeft().getX()) * percentage)/2), centerPoint.getY() + (((rectangle.getBottomRight().getY() - rectangle.getTopLeft().getY()) * percentage)/2)));
     }
     
-    protected  void mirrorRectangles(Rectangle rectangle, boolean flag){ //mirrorH if flag == true
+    protected  void mirrorRectangles(Rectangle rectangle, boolean flag){ // flag true, mirrorH
         if(flag){
             double lengthRectangle = rectangle.getBottomRight().getX() - rectangle.getTopLeft().getX();
             rectangle.setTopLeft(new Point(rectangle.getBottomRight().getX() , rectangle.getTopLeft().getY()));

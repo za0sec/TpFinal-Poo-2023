@@ -1,11 +1,12 @@
-package frontend;
+package frontend.buttons;
 
 import backend.CanvasState;
+import frontend.Redraw;
+import frontend.StatusPane;
 import frontend.buttons.drawButtons.*;
 import frontend.drawFigures.DrawFigure;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
